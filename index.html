@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bro said he knows a spot</title>
+  <meta name="description" content="A cinematic three-screen scroll story for a community travel-discovery app." />
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script> 
+  <script>
+    window.lenis = new Lenis({ autoRaf: true, autoToggle: true, anchors: true, allowNestedScroll: true, naiveDimensions: true, stopInertiaOnNavigate: true });
+  </script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="site-shell">
+    <section class="cinema-scroll" id="cinema" aria-label="bro said he knows a spot cinematic scroll story">
+      <div id="bridge" class="scroll-anchor" style="position: absolute; top: 1100px; left: 0; width: 1px; height: 1px; pointer-events: none;"></div>
+      <div id="bazaar" class="scroll-anchor" style="position: absolute; top: 2340px; left: 0; width: 1px; height: 1px; pointer-events: none;"></div>
+      <div id="routes" class="scroll-anchor" style="position: absolute; top: 3400px; left: 0; width: 1px; height: 1px; pointer-events: none;"></div>
+      <div class="stage">
+        <div class="world">
+          <img class="scene-img sky-img" src="https://raft-blast-61784561.figma.site/_assets/v11/16b5007d9c93971e26ffe4e0e3e37946f6bd538c.png" alt="" />
+
+          <header class="site-header" aria-label="Primary navigation">
+            <a class="site-logo" href="#cinema">bro said he knows a spot</a>
+            <nav class="site-nav" aria-label="Main menu">
+              <a href="#cinema">Join</a>
+              <a href="#bridge">Feed</a>
+              <a href="#bazaar">Board</a>
+              <a href="#routes">Business</a>
+            </nav>
+            <button class="language-switcher" aria-label="Change language">
+              <span>EN</span>
+              <span aria-hidden="true">⌄</span>
+            </button>
+          </header>
+
+          <div class="back-stack">
+            <img class="scene-img back-img back-four" src="https://raft-blast-61784561.figma.site/_assets/v11/8a7f8af50e0ce92ec2e228e7b0b4112178c51cf1.png" alt="" />
+
+            <section class="sights-slider" aria-label="App feature slider">
+              <div class="sights-track">
+                <article class="sight-card" tabindex="0" role="button" aria-label="Open Post & Pin card">
+                  <span class="sight-kicker">Create</span>
+                  <img class="sight-pin" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260730_230438_d526b8b6-8a2e-4e3b-9993-3908acae03a7.png" alt="" />
+                  <h3>Post & Pin</h3>
+                  <p>Share a photo or video from your trip and drop a map pin on the exact spot.</p>
+                </article>
+                <article class="sight-card" tabindex="0" role="button" aria-label="Open Hotel & Residency card">
+                  <span class="sight-kicker">Stay</span>
+                  <img class="sight-pin" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260730_230442_140bc25b-b165-4249-904a-f708bff6970e.png" alt="" />
+                  <h3>Hotel & Residency</h3>
+                  <p>Add the hotel or homestay you used, with honest feedback and contact details.</p>
+                </article>
+                <article class="sight-card" tabindex="0" role="button" aria-label="Open Transport card">
+                  <span class="sight-kicker">Move</span>
+                  <img class="sight-pin" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260730_230448_825949c9-ccdb-4857-b4a6-e349eccc9010.png" alt="" />
+                  <h3>Transport</h3>
+                  <p>List the transport you used with type, price, and contact for the next traveler.</p>
+                </article>
+                <article class="sight-card" tabindex="0" role="button" aria-label="Open Route card">
+                  <span class="sight-kicker">Plan</span>
+                  <img class="sight-pin" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260730_230438_d526b8b6-8a2e-4e3b-9993-3908acae03a7.png" alt="" />
+                  <h3>Route</h3>
+                  <p>Describe the route, the way you traveled, and what the trip actually cost.</p>
+                </article>
+                <article class="sight-card" tabindex="0" role="button" aria-label="Open Food & Restaurant card">
+                  <span class="sight-kicker">Eat</span>
+                  <img class="sight-pin" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260730_230442_140bc25b-b165-4249-904a-f708bff6970e.png" alt="" />
+                  <h3>Food & Restaurant</h3>
+                  <p>Save where you ate with price, feedback, location, and must-visit spots nearby.</p>
+                </article>
+              </div>
+            </section>
+
+            <img class="scene-img back-img back-bazaar" src="https://raft-blast-61784561.figma.site/_assets/v11/864afe00e41e2fa20a5aa546e15cb807e0f81384.png" alt="" />
+          </div>
+
+          <div class="sights-controls" aria-label="Slider controls">
+            <button class="sight-nav sight-prev" aria-label="Previous feature">←</button>
+            <button class="sight-nav sight-next" aria-label="Next feature">→</button>
+          </div>
+
+          <h1 class="hero-title">bro said he knows a spot</h1>
+
+          <img class="scene-img splitframe-img splitframe-left" src="https://raft-blast-61784561.figma.site/_assets/v11/7536d7b60a1fce482cf6edf3f0bffd3bad5d0f8a.png" alt="" />
+          <img class="scene-img splitframe-img splitframe-right" src="https://raft-blast-61784561.figma.site/_assets/v11/392db6a6a6b98e868bd7f8d3f55bb719d51e5028.png" alt="" />
+          <img class="scene-img bridge-img" src="https://raft-blast-61784561.figma.site/_assets/v11/c6a6d8ef49bca43f708aa852692942c45ec950d4.png" alt="" />
+          <img class="scene-img frame-two-img" src="https://raft-blast-61784561.figma.site/_assets/v11/ba75252bab2b1c510987b74837770f7bc8a6b2d4.png" alt="" />
+
+          <div class="shade"></div>
+        </div>
+
+        <section class="intro-copy" aria-label="App overview">
+          <p>Every real trip has a friend who already went. Post the spot, the stay, the ride, and the route — so the next traveler doesn't have to guess.</p>
+          <div class="hero-tags" aria-label="App highlights">
+            <span>Real Travelers</span>
+            <span>Verified Spots</span>
+            <span>Live Community</span>
+          </div>
+        </section>
+
+        <section class="story-panel story-panel-bridge" aria-label="Feed details">
+          <h2>The feed is where trips get planned.</h2>
+          <p>Photos, stays, transport, routes, and food — all pinned to a real place, posted by people who were actually there.</p>
+          <dl class="facts">
+            <div>
+              <dt>303Cr+</dt>
+              <dd>Domestic tourist visits across India in 2025</dd>
+            </div>
+            <div>
+              <dt>$263.6B</dt>
+              <dd>Size of India's tourism sector in 2025</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="story-panel story-panel-bazaar" aria-label="Tourism board and business details">
+          <h2>Built for the industry too.</h2>
+          <p>Tourism boards get real footfall and trend data. Hotels, transport, and restaurants can claim their listing and reach travelers directly.</p>
+          <button class="note-button">
+            <span aria-hidden="true">↗</span>
+            <span>Open business tools</span>
+          </button>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
