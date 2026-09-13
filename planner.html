@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Planner - bro said he knows a spot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+  <link rel="stylesheet" href="feed.css">
+  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="smooth-scroll.js"></script>
+</head>
+<body class="bg-transparent text-[#fdf1e1] antialiased">
+  
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 glass-nav">
+    <div class="flex-1">
+      <a href="index.html" class="font-ogg text-xl">bro said he knows a spot</a>
+    </div>
+    <div class="flex-1 flex justify-end items-center gap-6">
+      <a href="feed.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Feed</a>
+      <a href="dashboard.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Dashboard</a>
+      <a href="businesses.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Business</a>
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto my-10 px-4">
+    <div class="text-center mb-10">
+      <h1 class="font-ogg text-5xl mb-4 text-[#7fb4d4]">AI Itinerary Generator</h1>
+      <p class="text-lg text-[#fdf1e1]/80 max-w-2xl mx-auto">Skip the endless scrolling. Let our AI build a custom, budget-optimized route based on thousands of verified community posts.</p>
+    </div>
+
+    <!-- Generator Form -->
+    <div class="glass-modal p-8 rounded-3xl shadow-2xl mb-12" id="plannerForm">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Destination</label>
+          <input type="text" id="destInput" placeholder="e.g., Jaipur, Rajasthan" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Duration (Days)</label>
+          <input type="number" id="daysInput" placeholder="e.g., 3" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Total Budget (₹)</label>
+          <input type="number" id="budgetInput" placeholder="e.g., 15000" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <button id="generateBtn" class="bg-[#7fb4d4] text-[#111411] px-10 py-4 rounded-full font-bold text-lg hover:bg-[#a5d3f0] transition-transform hover:scale-105 shadow-lg shadow-[#7fb4d4]/20">Generate My Route</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden text-center py-20">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#7fb4d4] mb-4"></div>
+      <h3 class="text-xl font-medium text-[#7fb4d4]">AI is calculating the best routes...</h3>
+      <p class="text-[#fdf1e1]/60">Analyzing 4,231 verified community posts in Jaipur</p>
+    </div>
+
+    <!-- Results -->
+    <div id="resultsArea" class="hidden">
+      <h2 class="font-ogg text-3xl mb-8 border-b border-[#fdf1e1]/10 pb-4">Your 3-Day Jaipur Itinerary <span class="text-sm font-sans bg-green-500/20 text-green-300 px-3 py-1 rounded-full ml-4">Budget: ₹12,400 (Under Budget!)</span></h2>
+      
+      <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#fdf1e1]/20 before:to-transparent">
+        
+        <!-- Day 1 -->
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111411] bg-[#7fb4d4] text-[#111411] font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+            1
+          </div>
+          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-modal p-6 rounded-2xl">
+            <h3 class="font-ogg text-xl text-[#7fb4d4] mb-2">Heritage & Architecture</h3>
+            <ul class="space-y-4">
+              <li class="flex flex-col">
+                <span class="text-sm text-[#fdf1e1]/60">Morning (10:00 AM)</span>
+                <strong>Amer Fort <span class="text-blue-400 text-xs" title="Verified Spot">☑️</span></strong>
+                <span class="text-sm text-[#fdf1e1]/80">Transport: Auto Rickshaw (₹200)</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="text-sm text-[#fdf1e1]/60">Lunch (01:30 PM)</span>
+                <strong>1135 AD Restaurant <span class="text-blue-400 text-xs" title="Verified Partner">☑️</span></strong>
+                <span class="text-sm text-[#fdf1e1]/80">Est. Cost: ₹1,500</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="text-sm text-[#fdf1e1]/60">Stay (Night)</span>
+                <strong>Zostel Jaipur <span class="text-blue-400 text-xs" title="Verified Partner">☑️</span></strong>
+                <span class="text-sm text-[#fdf1e1]/80">Cost: ₹800/night</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111411] bg-[#7fb4d4] text-[#111411] font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+            2
+          </div>
+          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-modal p-6 rounded-2xl">
+            <h3 class="font-ogg text-xl text-[#7fb4d4] mb-2">City Heart & Shopping</h3>
+            <ul class="space-y-4">
+              <li class="flex flex-col">
+                <span class="text-sm text-[#fdf1e1]/60">Morning (09:00 AM)</span>
+                <strong>Hawa Mahal & City Palace</strong>
+                <span class="text-sm text-[#fdf1e1]/80">Walkable from Zostel</span>
+              </li>
+              <li class="flex flex-col">
+                <span class="text-sm text-[#fdf1e1]/60">Afternoon (03:00 PM)</span>
+                <strong>Bapu Bazaar (Local Handicrafts) 🧵</strong>
+                <span class="text-sm text-[#fdf1e1]/80 text-green-300">Supports Local Artisans</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <button id="globalSOS" aria-label="SOS Emergency" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; background: #e74c3c; color: white; width: 60px; height: 60px; border-radius: 50%; font-weight: bold; font-size: 16px; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(231, 76, 60, 0.5); cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="alert('🚨 SOS TRIGGERED! Live location securely shared with emergency contacts and nearest police station.')">SOS</button>
+
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      document.getElementById('plannerForm').classList.add('hidden');
+      document.getElementById('loadingState').classList.remove('hidden');
+      
+      setTimeout(() => {
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('resultsArea').classList.remove('hidden');
+      }, 2500);
+    });
+  </script>
+</body>
+</html>

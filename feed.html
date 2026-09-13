@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed - bro said he knows a spot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+  <link rel="stylesheet" href="feed.css">
+  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="smooth-scroll.js"></script>
+</head>
+<body class="bg-transparent text-[#fdf1e1] antialiased">
+  
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 glass-nav">
+    <div class="flex-1">
+      <!-- Removed Brand text to keep it clean -->
+    </div>
+    
+    <div class="flex-1 flex justify-center">
+      <div class="relative w-full max-w-md">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-[#fdf1e1]/60" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+        </div>
+        <input type="text" id="searchInput" class="glass-input block w-full p-2 pl-10 text-sm rounded-full placeholder-[#fdf1e1]/60 focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]/50" placeholder="Search locations or users...">
+      </div>
+    </div>
+    
+    <div class="flex-1 flex justify-end items-center gap-6">
+      <a href="planner.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">AI Planner</a>
+      <a href="dashboard.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Dashboard</a>
+      <a href="businesses.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Business</a>
+      <button id="createPostBtn" class="text-2xl hover:scale-110 transition-transform hover:text-[#7fb4d4]" title="Create Post">+</button>
+      <button id="chatBtn" class="text-xl hover:scale-110 transition-transform" title="Chat">💬</button>
+      <div class="w-9 h-9 rounded-full bg-[#7fb4d4] text-[#111411] flex items-center justify-center font-bold cursor-pointer hover:ring-2 ring-white/50" id="profileIcon">👤</div>
+    </div>
+  </nav>
+
+  <!-- Main Feed -->
+  <main class="max-w-2xl mx-auto my-10 px-4 flex flex-col gap-8" id="feedContainer">
+    <!-- Posts will be injected here by JS -->
+  </main>
+
+  <!-- Create Post Wizard Modal -->
+  <div id="createPostModal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="glass-modal w-[90%] max-w-lg rounded-2xl flex flex-col overflow-hidden relative shadow-2xl">
+      <div class="flex justify-between items-center p-5 border-b border-[#fdf1e1]/10">
+        <div class="w-8"></div>
+        <h2 id="wizardTitle" class="text-lg font-medium tracking-wide">Create Post - Step 1/4</h2>
+        <button class="text-3xl leading-none text-[#fdf1e1]/60 hover:text-white" id="closeCreateModal">&times;</button>
+      </div>
+      
+      <form id="createPostForm" class="flex flex-col flex-1 max-h-[75vh]">
+        <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
+          <!-- Step 1: Location & Media -->
+          <div class="wizard-step block" id="step1">
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Upload Photo/Video</label>
+              <div class="glass-input flex items-center justify-center w-full h-32 rounded-xl border-dashed border-2 border-[#fdf1e1]/30 hover:border-[#7fb4d4] cursor-pointer relative overflow-hidden group">
+                <input type="file" id="postMediaFile" accept="image/*,video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center z-0">
+                  <svg class="w-8 h-8 mb-3 text-[#fdf1e1]/60 group-hover:text-[#7fb4d4] transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                  </svg>
+                  <p class="mb-1 text-sm text-[#fdf1e1]/80 group-hover:text-white"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                </div>
+                <img id="mediaPreview" class="hidden absolute inset-0 w-full h-full object-cover z-0">
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Location</label>
+              <div class="flex gap-2">
+                <input type="text" id="postLocation" required placeholder="e.g. Ubud, Bali" class="glass-input flex-1 p-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]">
+                <button type="button" id="getLocationBtn" class="bg-[#fdf1e1]/10 hover:bg-[#fdf1e1]/20 border border-[#fdf1e1]/20 px-4 rounded-xl text-xl flex items-center justify-center transition-colors" title="Use Current Location">📍</button>
+              </div>
+            </div>
+            
+            <div class="mb-2">
+              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Description</label>
+              <textarea id="postDescription" placeholder="Tell us about the spot..." class="glass-input w-full p-3 rounded-xl min-h-[100px] resize-y focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]"></textarea>
+            </div>
+          </div>
+
+          <!-- Step 2: Hotel & Transport -->
+          <div class="wizard-step hidden" id="step2">
+            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Hotel & Residency</h3>
+            <div class="space-y-4 mb-6">
+              <input type="text" id="postHotelName" placeholder="Hotel Name (Optional)" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postHotelContact" placeholder="Contact / Booking Link" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <textarea id="postHotelFeedback" placeholder="Your feedback on the stay..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
+            </div>
+
+            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Transport</h3>
+            <div class="space-y-4">
+              <input type="text" id="postTransportType" placeholder="Type (e.g. Bus, Train, Flight)" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postTransportPrice" placeholder="Price" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postTransportContact" placeholder="Contact / Where to find" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Step 3: Route & Food -->
+          <div class="wizard-step hidden" id="step3">
+            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Route</h3>
+            <div class="space-y-4 mb-6">
+              <textarea id="postRouteDesc" placeholder="Describe the route you traveled..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
+              <input type="text" id="postRouteCost" placeholder="Total Travel Cost" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+            </div>
+
+            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Food & Restaurant</h3>
+            <div class="space-y-4">
+              <input type="text" id="postFoodPlace" placeholder="Restaurant Name" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postFoodPrice" placeholder="Price" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postFoodLocation" placeholder="Location" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <textarea id="postFoodFeedback" placeholder="Feedback on food..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Step 4: Must Visit & Review -->
+          <div class="wizard-step hidden" id="step4">
+            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Must Visit Nearby</h3>
+            <div class="space-y-4 mb-8">
+              <input type="text" id="postMustVisitName" placeholder="Place Name & Address" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+              <input type="text" id="postMustVisitTransport" placeholder="Way of Transport" class="glass-input w-full p-3 rounded-xl focus:outline-none">
+            </div>
+            
+            <div class="bg-[#fdf1e1]/5 p-6 rounded-2xl border border-[#fdf1e1]/10 text-center">
+              <div class="text-4xl mb-3">✨</div>
+              <h4 class="text-lg font-medium text-white mb-2">Ready to publish!</h4>
+              <p class="text-sm text-[#fdf1e1]/70">Your spot is about to go live for everyone to see.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 border-t border-[#fdf1e1]/10 flex justify-between bg-black/20">
+          <button type="button" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-[#fdf1e1]/10 hover:bg-[#fdf1e1]/20 transition-colors invisible" id="wizardPrevBtn">Back</button>
+          <button type="button" class="px-6 py-2.5 rounded-xl text-sm font-medium bg-[#fdf1e1] text-[#111411] hover:bg-white transition-colors shadow-lg shadow-white/10" id="wizardNextBtn">Next Step</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-medium bg-[#7fb4d4] text-[#111411] hover:bg-[#a5d3f0] transition-colors shadow-lg shadow-[#7fb4d4]/20 hidden" id="wizardSubmitBtn">Publish Spot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Chat Sidebar -->
+  <div id="chatSidebar" class="fixed right-[-350px] top-0 w-[350px] h-full z-[150] glass-modal border-l border-[#fdf1e1]/10 transition-all duration-300 ease-out flex flex-col shadow-2xl">
+    <div class="p-5 border-b border-[#fdf1e1]/10 flex justify-between items-center bg-black/10">
+      <h3 class="font-medium tracking-wide">Messages</h3>
+      <button id="closeChatBtn" class="text-2xl text-[#fdf1e1]/60 hover:text-white leading-none">&times;</button>
+    </div>
+    <div class="flex-1 p-5 overflow-y-auto custom-scrollbar flex flex-col gap-4" id="chatList">
+      <div class="bg-[#fdf1e1]/5 border border-[#fdf1e1]/10 p-3 rounded-2xl rounded-tl-sm w-4/5">
+        <strong class="block text-sm text-[#7fb4d4] mb-1">Jane Traveler</strong>
+        <p class="text-sm">Hey, loved your post on Bali!</p>
+      </div>
+    </div>
+    <div class="p-4 border-t border-[#fdf1e1]/10 bg-black/20 flex gap-2">
+      <input type="text" placeholder="Message Jane..." class="glass-input flex-1 p-3 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]">
+      <button class="bg-[#7fb4d4] text-[#111411] rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#a5d3f0] transition-colors">➤</button>
+    </div>
+  </div>
+
+  <button id="globalSOS" aria-label="SOS Emergency" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; background: #e74c3c; color: white; width: 60px; height: 60px; border-radius: 50%; font-weight: bold; font-size: 16px; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(231, 76, 60, 0.5); cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="alert('🚨 SOS TRIGGERED! Live location securely shared with emergency contacts and nearest police station.')">SOS</button>
+  <script src="feed.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+@font-face {
+  font-family: "Ogg Medium";
+  src: url("./fonts/OggText-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --glass-bg: rgba(11, 17, 16, 0.65);
+  --glass-border: rgba(253, 241, 225, 0.12);
+  --input-bg: rgba(253, 241, 225, 0.05);
+}
+
+body {
+  background-image: url('https://raft-blast-61784561.figma.site/_assets/v11/16b5007d9c93971e26ffe4e0e3e37946f6bd538c.png');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Custom Glassmorphism Classes for Tailwind */
+.glass-nav {
+  background: rgba(11, 17, 16, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-modal {
+  background: var(--glass-bg);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-input {
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  color: #fdf1e1;
+  backdrop-filter: blur(8px);
+}
+.glass-input::placeholder {
+  color: rgba(253, 241, 225, 0.5);
+}
+.glass-input:focus {
+  background: rgba(253, 241, 225, 0.08);
+}
+
+/* Scrollbar customization */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(253, 241, 225, 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(253, 241, 225, 0.3);
+}
+
+/* Base resets for Tailwind */
+.font-ogg {
+  font-family: "Ogg Medium", serif;
+}
