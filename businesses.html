@@ -3,93 +3,488 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Businesses - bro said he knows a spot</title>
+  <title>Verified Business Portal - Bro Said He Knows A Spot</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
   <link rel="stylesheet" href="feed.css">
   <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
   <script src="smooth-scroll.js"></script>
+  <style>
+    .glass-card {
+      background: rgba(11, 17, 16, 0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(253, 241, 225, 0.12);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(127, 180, 212, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+    .tab-active {
+      background: #7fb4d4 !important;
+      color: #111411 !important;
+      font-weight: 700;
+    }
+  </style>
 </head>
-<body class="bg-transparent text-[#fdf1e1] antialiased">
+<body class="bg-transparent text-[#fdf1e1] antialiased min-h-screen flex flex-col">
   
   <!-- Navigation -->
   <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 glass-nav">
-    <div class="flex-1">
-      <a href="index.html" class="font-ogg text-xl">bro said he knows a spot</a>
+    <div class="flex-1 flex items-center gap-3">
+      <a href="index.html" class="font-ogg text-xl tracking-tight text-[#fdf1e1] hover:text-[#7fb4d4] transition-colors">bro said he knows a spot</a>
+      <span class="hidden md:inline-block text-xs font-semibold uppercase text-[#7fb4d4] border border-[#7fb4d4]/40 bg-[#7fb4d4]/10 px-2.5 py-1 rounded-full">Business & Services Portal</span>
     </div>
     <div class="flex-1 flex justify-end items-center gap-6">
       <a href="feed.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Feed</a>
       <a href="planner.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">AI Planner</a>
       <a href="dashboard.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Dashboard</a>
-      <a href="businesses.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Business</a>
+      <button id="openRegisterModalBtn" class="bg-[#7fb4d4] text-[#111411] px-4 py-1.5 rounded-full font-bold text-xs hover:bg-[#a5d3f0] transition-transform hover:scale-105 shadow-md flex items-center gap-1.5">
+        <span>+</span> Register My Business
+      </button>
     </div>
   </nav>
 
-  <main class="max-w-5xl mx-auto my-10 px-4">
-    <div class="text-center mb-10">
-      <h1 class="font-ogg text-5xl mb-4 text-[#7fb4d4]">Verified Businesses</h1>
-      <p class="text-lg text-[#fdf1e1]/80 max-w-2xl mx-auto">Discover local spots verified by our community.</p>
+  <main class="max-w-7xl mx-auto my-8 px-4 flex-1 w-full space-y-8">
+    
+    <!-- Hero Banner -->
+    <div class="glass-card p-6 md:p-8 rounded-3xl shadow-2xl border border-[#7fb4d4]/30">
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#7fb4d4]/10 text-[#7fb4d4] border border-[#7fb4d4]/25 mb-3">
+            <span>🤝 Verified Local Partners, Stays, Transports & Restaurants</span>
+          </div>
+          <h1 class="font-ogg text-3xl md:text-4xl text-[#7fb4d4]">Verified Business Directory</h1>
+          <p class="text-sm text-[#fdf1e1]/80 mt-1 max-w-2xl">
+            Explore authentic local stays, vehicle rentals, guided tours, travel packages, and restaurants—complete with website links, direct contacts, and full menu/rate charts.
+          </p>
+        </div>
+
+        <button id="openRegisterModalBtn2" class="bg-[#7fb4d4] text-[#111411] px-6 py-3.5 rounded-full font-bold text-sm hover:bg-[#a5d3f0] transition-all transform hover:scale-105 shadow-lg flex items-center gap-2 whitespace-nowrap">
+          <span>🏨 List Your Business / Service</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <!-- Search & Filters Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10">
+        <!-- Search Input -->
+        <div class="md:col-span-2 relative">
+          <input type="text" id="bizSearchInput" placeholder="Search by business name, city, dish, or service (e.g. Jaipur, Hotdog, Rental)..." class="glass-input w-full p-3 pl-9 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+          <span class="absolute left-3 top-3.5 text-xs opacity-60">🔍</span>
+        </div>
+
+        <!-- Location Filter Select -->
+        <div>
+          <select id="bizLocationSelect" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4] bg-[#0b1110]">
+            <option value="" class="bg-[#0b1110]">All Locations</option>
+            <option value="jaipur" class="bg-[#0b1110]">Jaipur, Rajasthan</option>
+            <option value="indore" class="bg-[#0b1110]">Indore, Madhya Pradesh</option>
+            <option value="manali" class="bg-[#0b1110]">Manali, Himachal Pradesh</option>
+            <option value="goa" class="bg-[#0b1110]">Goa</option>
+          </select>
+        </div>
+
+        <!-- Filter Action Button -->
+        <div>
+          <button id="filterBizBtn" class="w-full bg-[#fdf1e1]/10 hover:bg-[#7fb4d4]/20 text-[#fdf1e1] border border-[#fdf1e1]/20 font-semibold p-3 rounded-xl text-sm transition-colors">
+            Filter Listings
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="flex items-center gap-2 mt-4 overflow-x-auto custom-scrollbar pb-1" id="categoryTabs">
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all tab-active whitespace-nowrap" data-cat="all">All Categories</button>
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap" data-cat="travel">🏨 Travel & Residency</button>
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap" data-cat="transport">🚕 Transport & Rentals</button>
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap" data-cat="tours">🗺️ Guided Tours</button>
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap" data-cat="packages">📦 Travel Packages</button>
+        <button class="cat-tab px-4 py-2 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 transition-all whitespace-nowrap" data-cat="food">🍽️ Food & Restaurants</button>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Business Card 1 -->
-      <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors">
-        <div class="h-48 bg-black/40">
-           <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=600&h=400" alt="Cafe" class="w-full h-full object-cover">
-        </div>
-        <div class="p-5">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold font-ogg">The Cozy Corner</h3>
-            <span class="bg-[#7fb4d4]/20 text-[#7fb4d4] text-xs px-2 py-1 rounded">Cafe</span>
-          </div>
-          <p class="text-sm text-[#fdf1e1]/70 mb-4">A great spot for coffee and reading, known for their artisan pastries and quiet atmosphere.</p>
-          <div class="flex items-center text-sm text-[#fdf1e1]/50">
-            <span>📍 Downtown</span>
-            <span class="mx-2">•</span>
-            <span>⭐ 4.8</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Business Card 2 -->
-      <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors">
-        <div class="h-48 bg-black/40">
-           <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600&h=400" alt="Restaurant" class="w-full h-full object-cover">
-        </div>
-        <div class="p-5">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold font-ogg">Midnight Ramen</h3>
-            <span class="bg-[#7fb4d4]/20 text-[#7fb4d4] text-xs px-2 py-1 rounded">Restaurant</span>
-          </div>
-          <p class="text-sm text-[#fdf1e1]/70 mb-4">Authentic Japanese ramen open late. A favorite among locals for post-party meals.</p>
-          <div class="flex items-center text-sm text-[#fdf1e1]/50">
-            <span>📍 Eastside</span>
-            <span class="mx-2">•</span>
-            <span>⭐ 4.9</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Business Card 3 -->
-      <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition-colors">
-        <div class="h-48 bg-black/40">
-           <img src="https://images.unsplash.com/photo-1549488344-c71b6ba71158?auto=format&fit=crop&q=80&w=600&h=400" alt="Bookstore" class="w-full h-full object-cover">
-        </div>
-        <div class="p-5">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold font-ogg">Chapter One</h3>
-            <span class="bg-[#7fb4d4]/20 text-[#7fb4d4] text-xs px-2 py-1 rounded">Bookstore</span>
-          </div>
-          <p class="text-sm text-[#fdf1e1]/70 mb-4">Independent bookstore with a curated selection of indie authors and zines.</p>
-          <div class="flex items-center text-sm text-[#fdf1e1]/50">
-            <span>📍 Westend</span>
-            <span class="mx-2">•</span>
-            <span>⭐ 4.7</span>
-          </div>
-        </div>
-      </div>
+    <!-- Business Listings Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="businessesGrid">
+      <!-- Business Cards rendered via JS -->
     </div>
   </main>
 
+  <!-- Register Business Modal -->
+  <div id="registerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 overflow-y-auto">
+    <div class="glass-card max-w-2xl w-full p-6 md:p-8 rounded-3xl shadow-2xl relative border border-[#7fb4d4]/40 my-8">
+      <button id="closeRegisterModalBtn" class="absolute top-4 right-4 text-[#fdf1e1]/60 hover:text-white text-2xl leading-none">&times;</button>
+      
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-[#7fb4d4]/20 flex items-center justify-center text-[#7fb4d4] text-xl font-bold">🏪</div>
+        <div>
+          <h3 class="font-ogg text-2xl text-[#7fb4d4]">Register Your Business or Service</h3>
+          <p class="text-xs text-[#fdf1e1]/70">Add your hotel, rental, tour, package, or restaurant for verified travelers</p>
+        </div>
+      </div>
+
+      <form id="addBusinessForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Business Name -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Business Name <span class="text-red-400">*</span></label>
+            <input type="text" id="regName" placeholder="e.g. Royal Haveli Stay / Himalayan Bikers" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]" required>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Category <span class="text-red-400">*</span></label>
+            <select id="regCategory" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4] bg-[#0b1110]" required>
+              <option value="travel" class="bg-[#0b1110]">🏨 Travel & Hotel / Residency</option>
+              <option value="transport" class="bg-[#0b1110]">🚕 Transport & Vehicle Rentals</option>
+              <option value="tours" class="bg-[#0b1110]">🗺️ Guided Tours & Activities</option>
+              <option value="packages" class="bg-[#0b1110]">📦 Travel & Sightseeing Packages</option>
+              <option value="food" class="bg-[#0b1110]">🍽️ Food & Restaurant / Cafe</option>
+            </select>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">City / Location <span class="text-red-400">*</span></label>
+            <input type="text" id="regLocation" placeholder="e.g. Jaipur, Manali, Goa, Indore" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]" required>
+          </div>
+
+          <!-- Price Range -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Price Range / Tariff</label>
+            <input type="text" id="regPriceRange" placeholder="e.g. ₹800 - ₹2,200/night or ₹600/day" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+          </div>
+
+          <!-- Website Link -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Website Link (URL)</label>
+            <input type="url" id="regWebsite" placeholder="https://yourbusiness.com" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Contact Phone / WhatsApp</label>
+            <input type="text" id="regPhone" placeholder="+91 98765 43210" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+          </div>
+        </div>
+
+        <!-- Image URL -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Banner Image URL (Optional)</label>
+          <input type="url" id="regImage" placeholder="https://images.unsplash.com/... or image link" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Business Overview & Highlights</label>
+          <textarea id="regDescription" rows="2" placeholder="Brief summary of your stay, food specialties, vehicles, or package inclusions..." class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]"></textarea>
+        </div>
+
+        <!-- Detailed Menu / Rates / Inclusions -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-1 text-[#fdf1e1]/80">Full Menu / Rate Chart / Package Details <span class="text-red-400">*</span></label>
+          <textarea id="regMenuItems" rows="4" placeholder="List your dishes & prices, vehicle rates, room tariffs, or tour inclusions (e.g. • Mutton Hotdog: ₹90 &#10; • Deluxe Room: ₹2200/night &#10; • Royal Enfield: ₹1200/day)" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]" required></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-3">
+          <button type="button" id="cancelRegisterBtn" class="px-5 py-2.5 rounded-full text-xs font-semibold border border-white/20 hover:bg-white/10 transition-colors">Cancel</button>
+          <button type="submit" id="submitBusinessBtn" class="bg-[#7fb4d4] text-[#111411] px-7 py-2.5 rounded-full font-bold text-xs hover:bg-[#a5d3f0] transition-transform hover:scale-105">Publish Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Menu & Price List Modal -->
+  <div id="menuModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
+    <div class="glass-card max-w-lg w-full p-6 rounded-3xl shadow-2xl relative border border-[#7fb4d4]/40 max-h-[85vh] flex flex-col">
+      <button id="closeMenuModalBtn" class="absolute top-4 right-4 text-[#fdf1e1]/60 hover:text-white text-2xl leading-none">&times;</button>
+      
+      <div class="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">📜</div>
+        <div>
+          <h3 class="font-ogg text-xl text-[#7fb4d4]" id="modalBizName">Business Menu & Rates</h3>
+          <p class="text-xs text-[#fdf1e1]/70" id="modalBizCategoryLoc">Category • Location</p>
+        </div>
+      </div>
+
+      <div class="overflow-y-auto custom-scrollbar flex-1 pr-2 space-y-4">
+        <div>
+          <h4 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-2">Detailed Menu / Price List / Inclusions</h4>
+          <pre class="bg-black/50 p-4 rounded-2xl text-xs text-[#fdf1e1]/90 leading-relaxed font-sans whitespace-pre-wrap border border-white/5" id="modalBizMenuText"></pre>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2 text-xs">
+          <div class="flex justify-between items-center" id="modalBizPhoneRow">
+            <span class="text-[#fdf1e1]/60">Contact Phone:</span>
+            <strong id="modalBizPhone" class="text-[#7fb4d4]">-</strong>
+          </div>
+          <div class="flex justify-between items-center" id="modalBizWebsiteRow">
+            <span class="text-[#fdf1e1]/60">Website:</span>
+            <a href="#" id="modalBizWebsite" target="_blank" class="text-blue-400 hover:underline font-medium truncate max-w-[200px]">-</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 mt-2 border-t border-white/10 flex justify-end">
+        <button id="closeMenuModalBtn2" class="bg-[#7fb4d4] text-[#111411] px-6 py-2 rounded-full font-bold text-xs hover:bg-[#a5d3f0] transition-colors">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
+    let allBusinesses = [];
+    let activeCategory = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Fetch initial business listings
+      loadBusinesses();
+
+      // 2. Category Tab Switches
+      document.querySelectorAll('.cat-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('tab-active'));
+          tab.classList.add('tab-active');
+          activeCategory = tab.getAttribute('data-cat');
+          renderBusinessesGrid();
+        });
+      });
+
+      // 3. Search & Location Filter
+      document.getElementById('filterBizBtn').addEventListener('click', () => {
+        renderBusinessesGrid();
+      });
+
+      document.getElementById('bizSearchInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') renderBusinessesGrid();
+      });
+
+      document.getElementById('bizLocationSelect').addEventListener('change', () => {
+        renderBusinessesGrid();
+      });
+
+      // 4. Modal Triggers
+      setupRegisterModal();
+      setupMenuModal();
+    });
+
+    async function loadBusinesses() {
+      try {
+        const res = await fetch(`${API_BASE}/businesses`);
+        if (!res.ok) throw new Error('Failed to load businesses');
+        allBusinesses = await res.json();
+        renderBusinessesGrid();
+      } catch (err) {
+        console.error('Error fetching businesses:', err);
+      }
+    }
+
+    function renderBusinessesGrid() {
+      const grid = document.getElementById('businessesGrid');
+      grid.innerHTML = '';
+
+      const searchQuery = document.getElementById('bizSearchInput').value.toLowerCase().trim();
+      const locQuery = document.getElementById('bizLocationSelect').value.toLowerCase();
+
+      const filtered = allBusinesses.filter(b => {
+        // Category match
+        if (activeCategory !== 'all' && (b.category || '').toLowerCase() !== activeCategory) {
+          return false;
+        }
+
+        // Location match
+        if (locQuery && !(b.location || '').toLowerCase().includes(locQuery)) {
+          return false;
+        }
+
+        // Search text match
+        if (searchQuery) {
+          const matchName = (b.name || '').toLowerCase().includes(searchQuery);
+          const matchLoc = (b.location || '').toLowerCase().includes(searchQuery);
+          const matchDesc = (b.description || '').toLowerCase().includes(searchQuery);
+          const matchMenu = (b.menu_items || '').toLowerCase().includes(searchQuery);
+          if (!matchName && !matchLoc && !matchDesc && !matchMenu) return false;
+        }
+
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-16 text-center text-[#fdf1e1]/60"><p class="text-base mb-2">No verified businesses match your filters.</p><p class="text-xs">Be the first to register a service for this category!</p></div>';
+        return;
+      }
+
+      filtered.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'glass-card rounded-2xl overflow-hidden glass-card-hover flex flex-col justify-between border border-white/10';
+
+        const categoryIcons = {
+          travel: '🏨 Travel & Stay',
+          transport: '🚕 Transport & Rental',
+          tours: '🗺️ Guided Tour',
+          packages: '📦 Travel Package',
+          food: '🍽️ Food & Restaurant'
+        };
+        const catLabel = categoryIcons[b.category] || '🏪 Business';
+
+        const fallbackImg = b.image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800';
+
+        card.innerHTML = `
+          <div>
+            <div class="h-48 bg-black/40 relative overflow-hidden">
+              <img src="${fallbackImg}" alt="${b.name}" class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-[#7fb4d4] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#7fb4d4]/30">
+                ${catLabel}
+              </span>
+              <span class="absolute top-3 right-3 bg-blue-500/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+                ☑️ Verified Partner
+              </span>
+            </div>
+            
+            <div class="p-5 space-y-3">
+              <div class="flex justify-between items-start gap-2">
+                <h3 class="font-ogg text-xl text-[#fdf1e1] leading-tight">${b.name}</h3>
+                <span class="text-xs font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20 shrink-0">
+                  ${b.price_range || 'Contact'}
+                </span>
+              </div>
+
+              <div class="text-xs text-[#7fb4d4] flex items-center gap-2">
+                <span>📍 ${b.location}</span>
+                <span>•</span>
+                <span>⭐ ${b.rating || '4.9'}</span>
+              </div>
+
+              <p class="text-xs text-[#fdf1e1]/80 leading-relaxed line-clamp-3">${b.description || 'Verified community partner offering local services.'}</p>
+            </div>
+          </div>
+
+          <div class="p-5 pt-0 space-y-2.5">
+            <!-- Menu & Price List Button -->
+            <button onclick='openMenuModal(${JSON.stringify(b).replace(/'/g, "&apos;")})' class="w-full bg-[#7fb4d4]/10 hover:bg-[#7fb4d4]/20 text-[#7fb4d4] border border-[#7fb4d4]/30 text-xs font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5">
+              <span>📜 View Menu & Rate List</span>
+            </button>
+
+            <!-- Direct Contact & Website Links Grid -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              ${b.website ? `
+                <a href="${b.website}" target="_blank" class="bg-white/5 hover:bg-white/10 text-[#fdf1e1] border border-white/15 py-2 rounded-xl text-center font-medium transition-colors flex items-center justify-center gap-1">
+                  <span>🌐 Website</span>
+                </a>
+              ` : `
+                <span class="bg-white/5 text-[#fdf1e1]/30 border border-white/5 py-2 rounded-xl text-center text-[11px] flex items-center justify-center">No Website</span>
+              `}
+
+              ${b.phone ? `
+                <a href="tel:${b.phone}" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 py-2 rounded-xl text-center font-medium transition-colors flex items-center justify-center gap-1">
+                  <span>📞 Call / Chat</span>
+                </a>
+              ` : `
+                <span class="bg-white/5 text-[#fdf1e1]/30 border border-white/5 py-2 rounded-xl text-center text-[11px] flex items-center justify-center">No Contact</span>
+              `}
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function setupRegisterModal() {
+      const modal = document.getElementById('registerModal');
+      const openBtn1 = document.getElementById('openRegisterModalBtn');
+      const openBtn2 = document.getElementById('openRegisterModalBtn2');
+      const closeBtn = document.getElementById('closeRegisterModalBtn');
+      const cancelBtn = document.getElementById('cancelRegisterBtn');
+      const form = document.getElementById('addBusinessForm');
+
+      const openModal = () => modal.classList.remove('hidden');
+      const closeModal = () => modal.classList.add('hidden');
+
+      if (openBtn1) openBtn1.onclick = openModal;
+      if (openBtn2) openBtn2.onclick = openModal;
+      closeBtn.onclick = closeModal;
+      cancelBtn.onclick = closeModal;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBusinessBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Publishing...';
+
+        const payload = {
+          name: document.getElementById('regName').value,
+          category: document.getElementById('regCategory').value,
+          location: document.getElementById('regLocation').value,
+          price_range: document.getElementById('regPriceRange').value,
+          website: document.getElementById('regWebsite').value,
+          phone: document.getElementById('regPhone').value,
+          image: document.getElementById('regImage').value,
+          description: document.getElementById('regDescription').value,
+          menu_items: document.getElementById('regMenuItems').value
+        };
+
+        try {
+          const res = await fetch(`${API_BASE}/businesses`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) throw new Error('Failed to register business');
+
+          const newBiz = await res.json();
+          allBusinesses.unshift(newBiz);
+          renderBusinessesGrid();
+
+          form.reset();
+          closeModal();
+          alert('✓ Business successfully registered and verified on the portal!');
+
+        } catch (err) {
+          alert('Error registering business: ' + err.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Publish Listing';
+        }
+      });
+    }
+
+    function setupMenuModal() {
+      const modal = document.getElementById('menuModal');
+      const closeBtn1 = document.getElementById('closeMenuModalBtn');
+      const closeBtn2 = document.getElementById('closeMenuModalBtn2');
+
+      const closeModal = () => modal.classList.add('hidden');
+      closeBtn1.onclick = closeModal;
+      closeBtn2.onclick = closeModal;
+    }
+
+    function openMenuModal(biz) {
+      document.getElementById('modalBizName').textContent = biz.name || 'Business Details';
+      document.getElementById('modalBizCategoryLoc').textContent = `${(biz.category || '').toUpperCase()} • 📍 ${biz.location || ''}`;
+      document.getElementById('modalBizMenuText').textContent = biz.menu_items || 'No menu or price list items provided.';
+      
+      const phoneElem = document.getElementById('modalBizPhone');
+      if (biz.phone) {
+        phoneElem.textContent = biz.phone;
+        document.getElementById('modalBizPhoneRow').classList.remove('hidden');
+      } else {
+        document.getElementById('modalBizPhoneRow').classList.add('hidden');
+      }
+
+      const webElem = document.getElementById('modalBizWebsite');
+      if (biz.website) {
+        webElem.textContent = biz.website;
+        webElem.href = biz.website;
+        document.getElementById('modalBizWebsiteRow').classList.remove('hidden');
+      } else {
+        document.getElementById('modalBizWebsiteRow').classList.add('hidden');
+      }
+
+      document.getElementById('menuModal').classList.remove('hidden');
+    }
+  </script>
 </body>
 </html>

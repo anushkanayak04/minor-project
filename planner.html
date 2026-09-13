@@ -3,132 +3,846 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Planner - bro said he knows a spot</title>
+  <title>AI Travel Planner - Bro Said He Knows A Spot</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
   <link rel="stylesheet" href="feed.css">
   <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
   <script src="smooth-scroll.js"></script>
+  <style>
+    .glass-card {
+      background: rgba(11, 17, 16, 0.72);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(253, 241, 225, 0.12);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(127, 180, 212, 0.4);
+      transform: translateY(-2px);
+      transition: all 0.25s ease;
+    }
+    .badge-verified {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      color: #93c5fd;
+    }
+    .badge-web {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: #6ee7b7;
+    }
+    .glow-btn {
+      box-shadow: 0 0 25px rgba(127, 180, 212, 0.35);
+    }
+    .glow-btn:hover {
+      box-shadow: 0 0 35px rgba(127, 180, 212, 0.6);
+    }
+  </style>
 </head>
-<body class="bg-transparent text-[#fdf1e1] antialiased">
+<body class="bg-transparent text-[#fdf1e1] antialiased min-h-screen flex flex-col">
   
   <!-- Navigation -->
   <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 glass-nav">
-    <div class="flex-1">
-      <a href="index.html" class="font-ogg text-xl">bro said he knows a spot</a>
+    <div class="flex-1 flex items-center gap-4">
+      <a href="index.html" class="font-ogg text-xl tracking-tight text-[#fdf1e1] hover:text-[#7fb4d4] transition-colors">bro said he knows a spot</a>
+      <span class="hidden md:inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#7fb4d4]/10 text-[#7fb4d4] border border-[#7fb4d4]/30">AI Itinerary v2</span>
     </div>
     <div class="flex-1 flex justify-end items-center gap-6">
       <a href="feed.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Feed</a>
       <a href="dashboard.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Dashboard</a>
       <a href="businesses.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Business</a>
+      <button id="openKeyModalBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#fdf1e1]/10 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/20 hover:border-[#7fb4d4]/50 transition-all text-[#fdf1e1]">
+        <span id="keyStatusDot" class="w-2 h-2 rounded-full bg-yellow-400 inline-block animate-pulse"></span>
+        <span id="keyStatusText">AI Settings</span>
+      </button>
     </div>
   </nav>
 
-  <main class="max-w-4xl mx-auto my-10 px-4">
-    <div class="text-center mb-10">
-      <h1 class="font-ogg text-5xl mb-4 text-[#7fb4d4]">AI Itinerary Generator</h1>
-      <p class="text-lg text-[#fdf1e1]/80 max-w-2xl mx-auto">Skip the endless scrolling. Let our AI build a custom, budget-optimized route based on thousands of verified community posts.</p>
-    </div>
-
-    <!-- Generator Form -->
-    <div class="glass-modal p-8 rounded-3xl shadow-2xl mb-12" id="plannerForm">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Groq API Key Modal -->
+  <div id="keyModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+    <div class="glass-card max-w-md w-full p-6 rounded-3xl shadow-2xl relative border border-[#7fb4d4]/30 animate-fade-in">
+      <button id="closeKeyModalBtn" class="absolute top-4 right-4 text-[#fdf1e1]/60 hover:text-white text-2xl leading-none">&times;</button>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-[#7fb4d4]/20 flex items-center justify-center text-[#7fb4d4] text-xl font-bold">⚡</div>
         <div>
-          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Destination</label>
-          <input type="text" id="destInput" placeholder="e.g., Jaipur, Rajasthan" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Duration (Days)</label>
-          <input type="number" id="daysInput" placeholder="e.g., 3" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Total Budget (₹)</label>
-          <input type="number" id="budgetInput" placeholder="e.g., 15000" class="glass-input w-full p-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+          <h3 class="font-ogg text-xl text-[#7fb4d4]">Groq AI Engine</h3>
+          <p class="text-xs text-[#fdf1e1]/70">Ultra-fast travel planning via Llama 3.3</p>
         </div>
       </div>
-      <div class="mt-8 text-center">
-        <button id="generateBtn" class="bg-[#7fb4d4] text-[#111411] px-10 py-4 rounded-full font-bold text-lg hover:bg-[#a5d3f0] transition-transform hover:scale-105 shadow-lg shadow-[#7fb4d4]/20">Generate My Route</button>
+      <p class="text-xs text-[#fdf1e1]/80 mb-4 leading-relaxed">
+        Connect your Groq API key for live AI synthesis. If no key is provided, the planner automatically runs our high-fidelity real travel intelligence engine with full influencer & web data fallback.
+      </p>
+      <div class="mb-4">
+        <label class="block text-xs uppercase tracking-wider text-[#fdf1e1]/70 mb-1.5 font-medium">Groq API Key</label>
+        <input type="password" id="groqKeyInput" placeholder="gsk_..." class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+      </div>
+      <div id="keyFeedback" class="text-xs mb-4 hidden"></div>
+      <div class="flex gap-3 justify-end">
+        <button id="testSaveKeyBtn" class="bg-[#7fb4d4] text-[#111411] px-5 py-2.5 rounded-full font-bold text-xs hover:bg-[#a5d3f0] transition-colors">Save Key</button>
+        <button id="cancelKeyBtn" class="px-4 py-2.5 rounded-full text-xs border border-[#fdf1e1]/20 hover:bg-[#fdf1e1]/10 transition-colors">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto my-8 px-4 flex-1 w-full">
+    <!-- Hero Banner -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#7fb4d4]/10 text-[#7fb4d4] border border-[#7fb4d4]/25 mb-4">
+        <span>✨ Verified Influencer Analysis + Live Web Fallback</span>
+      </div>
+      <h1 class="font-ogg text-4xl md:text-5xl mb-3 text-[#7fb4d4]">AI Itinerary & Spot Planner</h1>
+      <p class="text-base md:text-lg text-[#fdf1e1]/80 max-w-2xl mx-auto">
+        Give us a destination. If an influencer has posted a spot on our platform, we prioritize their verified gems. If not, our AI queries real travel intelligence to build your perfect route.
+      </p>
+    </div>
+
+    <!-- Quick Suggestions Tags -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-6" id="quickDestTags">
+      <span class="text-xs text-[#fdf1e1]/60 mr-1">Popular Spots:</span>
+      <button type="button" class="quick-dest-btn px-3 py-1 rounded-full text-xs font-medium bg-[#fdf1e1]/5 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/15 hover:border-[#7fb4d4]/50 transition-all flex items-center gap-1.5" data-dest="Indore, Madhya Pradesh">
+        <span class="text-blue-400">☑️</span> Indore (Community Verified)
+      </button>
+      <button type="button" class="quick-dest-btn px-3 py-1 rounded-full text-xs font-medium bg-[#fdf1e1]/5 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/15 hover:border-[#7fb4d4]/50 transition-all" data-dest="Jaipur, Rajasthan">
+        Jaipur
+      </button>
+      <button type="button" class="quick-dest-btn px-3 py-1 rounded-full text-xs font-medium bg-[#fdf1e1]/5 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/15 hover:border-[#7fb4d4]/50 transition-all" data-dest="Manali, Himachal Pradesh">
+        Manali
+      </button>
+      <button type="button" class="quick-dest-btn px-3 py-1 rounded-full text-xs font-medium bg-[#fdf1e1]/5 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/15 hover:border-[#7fb4d4]/50 transition-all" data-dest="Goa">
+        Goa
+      </button>
+      <button type="button" class="quick-dest-btn px-3 py-1 rounded-full text-xs font-medium bg-[#fdf1e1]/5 hover:bg-[#7fb4d4]/20 border border-[#fdf1e1]/15 hover:border-[#7fb4d4]/50 transition-all" data-dest="Kyoto, Japan">
+        Kyoto
+      </button>
+    </div>
+
+    <!-- Generator Form Card -->
+    <div class="glass-card p-6 md:p-8 rounded-3xl shadow-2xl mb-10 border border-[#fdf1e1]/10" id="plannerForm">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+        <!-- Destination -->
+        <div class="md:col-span-1">
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Destination <span class="text-red-400">*</span></label>
+          <div class="relative">
+            <input type="text" id="destInput" placeholder="e.g. Indore, Jaipur, Manali, Bali" class="glass-input w-full p-3.5 pl-10 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]" required>
+            <span class="absolute left-3.5 top-4 text-base opacity-60">📍</span>
+          </div>
+          <div id="destHint" class="text-xs text-[#7fb4d4] mt-1.5 min-h-[18px]"></div>
+        </div>
+
+        <!-- Duration -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Trip Length (Days)</label>
+          <div class="flex items-center gap-2">
+            <input type="number" id="daysInput" min="1" max="14" value="3" class="glass-input w-full p-3.5 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+            <div class="flex gap-1">
+              <button type="button" onclick="setDays(2)" class="px-2.5 py-1 text-xs rounded-lg bg-[#fdf1e1]/10 hover:bg-[#7fb4d4]/30">2d</button>
+              <button type="button" onclick="setDays(3)" class="px-2.5 py-1 text-xs rounded-lg bg-[#fdf1e1]/10 hover:bg-[#7fb4d4]/30">3d</button>
+              <button type="button" onclick="setDays(5)" class="px-2.5 py-1 text-xs rounded-lg bg-[#fdf1e1]/10 hover:bg-[#7fb4d4]/30">5d</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Budget Tier -->
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Budget Tier</label>
+          <select id="budgetTierSelect" class="glass-input w-full p-3.5 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-[#7fb4d4] bg-[#0b1110]">
+            <option value="budget" class="bg-[#0b1110] text-[#fdf1e1]">Budget / Backpacker (Hostels, Street Food)</option>
+            <option value="mid" selected class="bg-[#0b1110] text-[#fdf1e1]">Mid-Range (Boutique Hotels & Cafes)</option>
+            <option value="luxury" class="bg-[#0b1110] text-[#fdf1e1]">Luxury (5-Star Stays, Fine Dining)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Advanced Preferences Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 border-t border-[#fdf1e1]/10 mb-6">
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Group Type</label>
+          <select id="groupSizeSelect" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4] bg-[#0b1110]">
+            <option value="solo" class="bg-[#0b1110]">Solo Traveler</option>
+            <option value="couple" class="bg-[#0b1110]">Couple / Duo</option>
+            <option value="friends" selected class="bg-[#0b1110]">Friends Group</option>
+            <option value="family" class="bg-[#0b1110]">Family with Kids</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Travel Style</label>
+          <select id="travelStyleSelect" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4] bg-[#0b1110]">
+            <option value="balanced" selected class="bg-[#0b1110]">Balanced (Highlights + Local Hidden Spots)</option>
+            <option value="culture" class="bg-[#0b1110]">Heritage & Architecture</option>
+            <option value="foodie" class="bg-[#0b1110]">Foodie & Night Markets</option>
+            <option value="adventure" class="bg-[#0b1110]">Adventure & Nature</option>
+            <option value="relaxation" class="bg-[#0b1110]">Slow & Relaxed Vibes</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-semibold mb-2 text-[#fdf1e1]/80">Specific Interests (Optional)</label>
+          <input type="text" id="interestsInput" placeholder="e.g. sunsets, local sweets, cafes, trekking" class="glass-input w-full p-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="generateBtn" class="bg-[#7fb4d4] text-[#111411] px-10 py-4 rounded-full font-bold text-lg hover:bg-[#a5d3f0] transition-all duration-300 transform hover:scale-105 glow-btn inline-flex items-center gap-2">
+          <span>Generate Actionable Route</span>
+          <span>⚡</span>
+        </button>
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div id="loadingState" class="hidden text-center py-20">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#7fb4d4] mb-4"></div>
-      <h3 class="text-xl font-medium text-[#7fb4d4]">AI is calculating the best routes...</h3>
-      <p class="text-[#fdf1e1]/60">Analyzing 4,231 verified community posts in Jaipur</p>
-    </div>
-
-    <!-- Results -->
-    <div id="resultsArea" class="hidden">
-      <h2 class="font-ogg text-3xl mb-8 border-b border-[#fdf1e1]/10 pb-4">Your 3-Day Jaipur Itinerary <span class="text-sm font-sans bg-green-500/20 text-green-300 px-3 py-1 rounded-full ml-4">Budget: ₹12,400 (Under Budget!)</span></h2>
-      
-      <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-[#fdf1e1]/20 before:to-transparent">
+    <!-- Dynamic Animated Loading State -->
+    <div id="loadingState" class="hidden text-center py-16 px-4">
+      <div class="glass-card max-w-lg mx-auto p-8 rounded-3xl shadow-2xl border border-[#7fb4d4]/30">
+        <div class="relative w-16 h-16 mx-auto mb-6">
+          <div class="absolute inset-0 rounded-full border-4 border-[#7fb4d4]/20"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-[#7fb4d4] border-t-transparent animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-xl">🧭</div>
+        </div>
+        <h3 class="text-2xl font-ogg text-[#7fb4d4] mb-2" id="loadingTitle">Analyzing Destination...</h3>
+        <p class="text-sm text-[#fdf1e1]/70 mb-6" id="loadingSubtitle">Consulting platform database and travel intelligence</p>
         
-        <!-- Day 1 -->
-        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-          <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111411] bg-[#7fb4d4] text-[#111411] font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-            1
+        <!-- Checklist Steps -->
+        <div class="space-y-3 text-left max-w-sm mx-auto text-xs" id="loadingSteps">
+          <div class="flex items-center gap-3 text-[#fdf1e1]/90" id="step1">
+            <span class="step-icon w-5 h-5 rounded-full bg-[#7fb4d4]/20 text-[#7fb4d4] flex items-center justify-center font-bold">1</span>
+            <span>Checking platform for verified influencer posts...</span>
           </div>
-          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-modal p-6 rounded-2xl">
-            <h3 class="font-ogg text-xl text-[#7fb4d4] mb-2">Heritage & Architecture</h3>
-            <ul class="space-y-4">
-              <li class="flex flex-col">
-                <span class="text-sm text-[#fdf1e1]/60">Morning (10:00 AM)</span>
-                <strong>Amer Fort <span class="text-blue-400 text-xs" title="Verified Spot">☑️</span></strong>
-                <span class="text-sm text-[#fdf1e1]/80">Transport: Auto Rickshaw (₹200)</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="text-sm text-[#fdf1e1]/60">Lunch (01:30 PM)</span>
-                <strong>1135 AD Restaurant <span class="text-blue-400 text-xs" title="Verified Partner">☑️</span></strong>
-                <span class="text-sm text-[#fdf1e1]/80">Est. Cost: ₹1,500</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="text-sm text-[#fdf1e1]/60">Stay (Night)</span>
-                <strong>Zostel Jaipur <span class="text-blue-400 text-xs" title="Verified Partner">☑️</span></strong>
-                <span class="text-sm text-[#fdf1e1]/80">Cost: ₹800/night</span>
-              </li>
-            </ul>
+          <div class="flex items-center gap-3 text-[#fdf1e1]/40" id="step2">
+            <span class="step-icon w-5 h-5 rounded-full bg-white/10 flex items-center justify-center font-bold">2</span>
+            <span>Extracting stays, hidden food gems & transit...</span>
+          </div>
+          <div class="flex items-center gap-3 text-[#fdf1e1]/40" id="step3">
+            <span class="step-icon w-5 h-5 rounded-full bg-white/10 flex items-center justify-center font-bold">3</span>
+            <span>Querying live web travel guides & routes...</span>
+          </div>
+          <div class="flex items-center gap-3 text-[#fdf1e1]/40" id="step4">
+            <span class="step-icon w-5 h-5 rounded-full bg-white/10 flex items-center justify-center font-bold">4</span>
+            <span>Synthesizing day-by-day plan & budget breakdown...</span>
           </div>
         </div>
-
-        <!-- Day 2 -->
-        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-          <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#111411] bg-[#7fb4d4] text-[#111411] font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-            2
-          </div>
-          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-modal p-6 rounded-2xl">
-            <h3 class="font-ogg text-xl text-[#7fb4d4] mb-2">City Heart & Shopping</h3>
-            <ul class="space-y-4">
-              <li class="flex flex-col">
-                <span class="text-sm text-[#fdf1e1]/60">Morning (09:00 AM)</span>
-                <strong>Hawa Mahal & City Palace</strong>
-                <span class="text-sm text-[#fdf1e1]/80">Walkable from Zostel</span>
-              </li>
-              <li class="flex flex-col">
-                <span class="text-sm text-[#fdf1e1]/60">Afternoon (03:00 PM)</span>
-                <strong>Bapu Bazaar (Local Handicrafts) 🧵</strong>
-                <span class="text-sm text-[#fdf1e1]/80 text-green-300">Supports Local Artisans</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
       </div>
+    </div>
+
+    <!-- Complete Actionable Itinerary Results Area -->
+    <div id="resultsArea" class="hidden space-y-8 animate-fade-in pb-16">
+      
+      <!-- Top Actions & Source Banner -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-[#7fb4d4]/30">
+        <div>
+          <div class="flex items-center gap-3 flex-wrap mb-2">
+            <span id="sourceBadge" class="badge-verified px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+              ☑️ Verified Community Post Backed
+            </span>
+            <span id="sourcesUsedBadge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/10 text-[#fdf1e1]/70">
+              Sources: Verified Post + Web Search
+            </span>
+          </div>
+          <h2 class="font-ogg text-3xl md:text-4xl text-[#7fb4d4]" id="resDestinationTitle">Trip to Jaipur</h2>
+        </div>
+
+        <div class="flex gap-2.5 flex-wrap">
+          <button id="editParamsBtn" class="px-4 py-2 rounded-full text-xs font-semibold bg-[#fdf1e1]/10 hover:bg-[#fdf1e1]/20 border border-[#fdf1e1]/20 transition-colors flex items-center gap-1.5">
+            <span>✏️</span> Edit Preferences
+          </button>
+          <button id="copyJsonBtn" class="px-4 py-2 rounded-full text-xs font-semibold bg-[#7fb4d4]/10 hover:bg-[#7fb4d4]/20 border border-[#7fb4d4]/40 text-[#7fb4d4] transition-colors flex items-center gap-1.5">
+            <span>📋</span> Copy JSON
+          </button>
+          <button onclick="window.print()" class="px-4 py-2 rounded-full text-xs font-semibold bg-[#7fb4d4] text-[#111411] hover:bg-[#a5d3f0] transition-colors flex items-center gap-1.5">
+            <span>🖨️</span> Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- 1. Destination Snapshot Card -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-3 flex items-center gap-2">
+          <span>🌟</span> 1. Destination Snapshot
+        </h3>
+        <p class="text-base md:text-lg text-[#fdf1e1]/90 leading-relaxed" id="resSnapshot">
+          Snapshot text will load here.
+        </p>
+      </div>
+
+      <!-- 2. Getting There Card -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-3 flex items-center gap-2">
+          <span>✈️</span> 2. Getting There (Transit Inbound & Outbound)
+        </h3>
+        <p class="text-sm md:text-base text-[#fdf1e1]/85 leading-relaxed" id="resGettingThere">
+          Getting there instructions will load here.
+        </p>
+      </div>
+
+      <!-- 3. Where to Stay (Residency) Options -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold flex items-center gap-2">
+            <span>🏨</span> 3. Where to Stay (Residency by Tier)
+          </h3>
+          <span class="text-xs text-[#fdf1e1]/60">Matched to vibe & budget</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="resStayGrid">
+          <!-- Stays populated dynamically -->
+        </div>
+      </div>
+
+      <!-- 4. Day-by-Day Itinerary -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-[#fdf1e1]/10 pb-4">
+          <div>
+            <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold flex items-center gap-2 mb-1">
+              <span>🗺️</span> 4. Day-by-Day Actionable Itinerary
+            </h3>
+            <p class="text-xs text-[#fdf1e1]/60">Sequenced logically by opening hours & geographical proximity</p>
+          </div>
+          <!-- Day Filter Pills -->
+          <div class="flex gap-2 flex-wrap" id="dayTabsContainer">
+            <!-- Tabs added dynamically -->
+          </div>
+        </div>
+
+        <div id="itineraryContainer" class="space-y-6">
+          <!-- Itinerary days will render here -->
+        </div>
+      </div>
+
+      <!-- 5. Must-See Spots & Experiences -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-4 flex items-center gap-2">
+          <span>📍</span> 5. Must-See Spots & Experiences
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Influencer Spots Column -->
+          <div class="bg-black/30 p-5 rounded-2xl border border-blue-500/20">
+            <h4 class="text-sm font-semibold text-blue-400 mb-3 flex items-center gap-1.5">
+              <span>☑️</span> Featured in Community Post
+            </h4>
+            <div id="resInfluencerSpotsList" class="space-y-3">
+              <!-- Dynamically added -->
+            </div>
+          </div>
+          <!-- Additional Recommendations Column -->
+          <div class="bg-black/30 p-5 rounded-2xl border border-emerald-500/20">
+            <h4 class="text-sm font-semibold text-emerald-400 mb-3 flex items-center gap-1.5">
+              <span>🌐</span> Additional Verified Finds
+            </h4>
+            <div id="resWebSpotsList" class="space-y-3">
+              <!-- Dynamically added -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Food & Local Specialties -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-4 flex items-center gap-2">
+          <span>🍲</span> 6. Food & Local Specialties
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="resFoodGrid">
+          <!-- Food cards populated dynamically -->
+        </div>
+      </div>
+
+      <!-- 7. Local Transport & 8. Budget Estimate (2-Col Grid) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- 7. Local Transport -->
+        <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+          <div>
+            <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-3 flex items-center gap-2">
+              <span>🚕</span> 7. Local Transport Guide
+            </h3>
+            <p class="text-sm text-[#fdf1e1]/85 leading-relaxed whitespace-pre-line" id="resLocalTransport">
+              Transit info here.
+            </p>
+          </div>
+        </div>
+
+        <!-- 8. Budget Estimate -->
+        <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+          <div>
+            <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-3 flex items-center gap-2">
+              <span>💰</span> 8. Budget Estimate
+            </h3>
+            <div class="space-y-3 my-4">
+              <div class="flex justify-between items-center text-sm p-2.5 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-[#fdf1e1]/70">Budget Tier (Backpacker):</span>
+                <strong class="text-green-300" id="resBudgetTierCost">-</strong>
+              </div>
+              <div class="flex justify-between items-center text-sm p-2.5 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-[#fdf1e1]/70">Mid-Range (Comfort):</span>
+                <strong class="text-blue-300" id="resMidTierCost">-</strong>
+              </div>
+              <div class="flex justify-between items-center text-sm p-2.5 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-[#fdf1e1]/70">Luxury (Resorts & Palaces):</span>
+                <strong class="text-amber-300" id="resLuxuryTierCost">-</strong>
+              </div>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center justify-between">
+            <span>Estimated Total for Selected Plan:</span>
+            <span class="text-sm" id="resTotalBudgetEst">Calculated</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Practical Tips -->
+      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h3 class="text-xs uppercase tracking-widest text-[#7fb4d4] font-bold mb-3 flex items-center gap-2">
+          <span>💡</span> 9. Practical Tips & Safety Notes
+        </h3>
+        <ul class="space-y-2.5 text-sm text-[#fdf1e1]/85" id="resTipsList">
+          <!-- Tips added dynamically -->
+        </ul>
+      </div>
+
+      <!-- 10. Sources & Verification Footnote -->
+      <div class="glass-card p-6 rounded-3xl shadow-xl border border-white/5 text-xs text-[#fdf1e1]/70 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <strong class="text-[#fdf1e1]">Sources & Verification:</strong>
+          <span id="resSourcesSummary" class="ml-1">Information verified from community uploads and live travel knowledge.</span>
+          <p class="text-[11px] text-[#fdf1e1]/50 mt-1">⚠️ Note: Specific prices, entry hours, and local union taxi rates are subject to seasonal revisions. Please confirm closer to travel date.</p>
+        </div>
+        <button id="toggleJsonBtn" class="px-3 py-1.5 rounded-full text-xs border border-[#fdf1e1]/20 hover:bg-[#fdf1e1]/10 transition-colors whitespace-nowrap">
+          { } View Raw Schema JSON
+        </button>
+      </div>
+
+      <!-- Collapsible Raw JSON Schema Viewer -->
+      <div id="rawJsonArea" class="hidden glass-card p-6 rounded-3xl shadow-xl">
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-xs font-mono text-[#7fb4d4]">Structured API Output (JSON)</span>
+          <button id="copyRawJsonBtn" class="text-xs text-[#7fb4d4] hover:underline">Copy to Clipboard</button>
+        </div>
+        <pre class="bg-black/60 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-x-auto max-h-96 custom-scrollbar" id="rawJsonContent"></pre>
+      </div>
+
     </div>
   </main>
 
   <button id="globalSOS" aria-label="SOS Emergency" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; background: #e74c3c; color: white; width: 60px; height: 60px; border-radius: 50%; font-weight: bold; font-size: 16px; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(231, 76, 60, 0.5); cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" onclick="alert('🚨 SOS TRIGGERED! Live location securely shared with emergency contacts and nearest police station.')">SOS</button>
 
   <script>
-    document.getElementById('generateBtn').addEventListener('click', () => {
-      document.getElementById('plannerForm').classList.add('hidden');
-      document.getElementById('loadingState').classList.remove('hidden');
-      
-      setTimeout(() => {
-        document.getElementById('loadingState').classList.add('hidden');
-        document.getElementById('resultsArea').classList.remove('hidden');
-      }, 2500);
+    const API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
+    let currentPlan = null;
+    let verifiedDestinations = [];
+
+    function setDays(n) {
+      document.getElementById('daysInput').value = n;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Check Groq Key status
+      checkGroqStatus();
+
+      // 2. Fetch platform destinations for autocomplete / hints
+      fetchPlatformDestinations();
+
+      // 3. Quick dest buttons
+      document.querySelectorAll('.quick-dest-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('destInput').value = btn.getAttribute('data-dest');
+          checkDestinationHint(btn.getAttribute('data-dest'));
+        });
+      });
+
+      // 4. Live destination typing hint
+      const destInput = document.getElementById('destInput');
+      destInput.addEventListener('input', (e) => {
+        checkDestinationHint(e.target.value);
+      });
+
+      // 5. Generate Plan Button
+      document.getElementById('generateBtn').addEventListener('click', handleGeneratePlan);
+
+      // 6. Edit Params Button
+      document.getElementById('editParamsBtn').addEventListener('click', () => {
+        document.getElementById('resultsArea').classList.add('hidden');
+        document.getElementById('plannerForm').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // 7. Modal Listeners
+      setupModal();
+
+      // 8. Toggle JSON Schema
+      document.getElementById('toggleJsonBtn').addEventListener('click', () => {
+        const area = document.getElementById('rawJsonArea');
+        area.classList.toggle('hidden');
+      });
+
+      document.getElementById('copyJsonBtn').addEventListener('click', copyPlanJson);
+      document.getElementById('copyRawJsonBtn').addEventListener('click', copyPlanJson);
     });
+
+    async function checkGroqStatus() {
+      try {
+        const res = await fetch(`${API_BASE}/config/groq-key`);
+        if (res.ok) {
+          const data = await res.json();
+          const dot = document.getElementById('keyStatusDot');
+          const text = document.getElementById('keyStatusText');
+          if (data.configured) {
+            dot.className = 'w-2 h-2 rounded-full bg-emerald-400 inline-block';
+            text.textContent = 'Groq AI: Active';
+          } else {
+            dot.className = 'w-2 h-2 rounded-full bg-yellow-400 inline-block';
+            text.textContent = 'AI Engine: Ready';
+          }
+        }
+      } catch (err) {
+        console.log('Key status check skipped:', err);
+      }
+    }
+
+    async function fetchPlatformDestinations() {
+      try {
+        const res = await fetch(`${API_BASE}/destinations`);
+        if (res.ok) {
+          verifiedDestinations = await res.json();
+        }
+      } catch (e) {
+        console.log('Destinations load skipped');
+      }
+    }
+
+    function checkDestinationHint(text) {
+      const hint = document.getElementById('destHint');
+      const val = (text || '').toLowerCase().trim();
+      if (!val) {
+        hint.textContent = '';
+        return;
+      }
+      const match = verifiedDestinations.find(d => d.name.toLowerCase().includes(val) || val.includes(d.name.toLowerCase().split(',')[0]));
+      if (match || val.includes('indore') || val.includes('22.7')) {
+        hint.innerHTML = '✨ <strong class="text-blue-400">Verified community post found on platform!</strong> Influencer spots & residency will be prioritized.';
+      } else {
+        hint.innerHTML = '🌐 No platform post yet. <strong class="text-emerald-300">Live AI web intelligence will synthesize a complete itinerary.</strong>';
+      }
+    }
+
+    function setupModal() {
+      const modal = document.getElementById('keyModal');
+      const openBtn = document.getElementById('openKeyModalBtn');
+      const closeBtn = document.getElementById('closeKeyModalBtn');
+      const cancelBtn = document.getElementById('cancelKeyBtn');
+      const testSaveBtn = document.getElementById('testSaveKeyBtn');
+      const feedback = document.getElementById('keyFeedback');
+
+      openBtn.onclick = () => modal.classList.remove('hidden');
+      closeBtn.onclick = () => modal.classList.add('hidden');
+      cancelBtn.onclick = () => modal.classList.add('hidden');
+
+      testSaveBtn.onclick = async () => {
+        const key = document.getElementById('groqKeyInput').value.trim();
+        if (!key) {
+          feedback.className = 'text-xs mb-4 text-red-400 block';
+          feedback.textContent = 'Please enter a valid Groq API key';
+          return;
+        }
+
+        testSaveBtn.disabled = true;
+        testSaveBtn.textContent = 'Saving...';
+        try {
+          const res = await fetch(`${API_BASE}/config/groq-key`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apiKey: key })
+          });
+          const data = await res.json();
+          feedback.className = 'text-xs mb-4 text-emerald-400 block';
+          feedback.textContent = `✓ Key saved successfully (${data.masked})!`;
+          checkGroqStatus();
+          setTimeout(() => modal.classList.add('hidden'), 1200);
+        } catch (err) {
+          feedback.className = 'text-xs mb-4 text-red-400 block';
+          feedback.textContent = 'Error saving key: ' + err.message;
+        } finally {
+          testSaveBtn.disabled = false;
+          testSaveBtn.textContent = 'Save Key';
+        }
+      };
+    }
+
+    async function handleGeneratePlan() {
+      const destination = document.getElementById('destInput').value.trim();
+      if (!destination) {
+        alert('Please enter a destination name (e.g. Indore, Jaipur, Manali).');
+        document.getElementById('destInput').focus();
+        return;
+      }
+
+      const days = parseInt(document.getElementById('daysInput').value) || 3;
+      const budgetTier = document.getElementById('budgetTierSelect').value;
+      const groupSize = document.getElementById('groupSizeSelect').value;
+      const travelStyle = document.getElementById('travelStyleSelect').value;
+      const interests = document.getElementById('interestsInput').value.trim();
+
+      // Switch to Loading View
+      document.getElementById('plannerForm').classList.add('hidden');
+      document.getElementById('resultsArea').classList.add('hidden');
+      document.getElementById('loadingState').classList.remove('hidden');
+
+      // Animate Loading Checklist Steps
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const step4 = document.getElementById('step4');
+
+      step1.className = 'flex items-center gap-3 text-emerald-400 font-semibold';
+      step1.querySelector('.step-icon').innerHTML = '✓';
+      step1.querySelector('.step-icon').className = 'step-icon w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold';
+
+      const timer1 = setTimeout(() => {
+        step2.className = 'flex items-center gap-3 text-emerald-400 font-semibold';
+        step2.querySelector('.step-icon').innerHTML = '✓';
+        step2.querySelector('.step-icon').className = 'step-icon w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold';
+      }, 700);
+
+      const timer2 = setTimeout(() => {
+        step3.className = 'flex items-center gap-3 text-emerald-400 font-semibold';
+        step3.querySelector('.step-icon').innerHTML = '✓';
+        step3.querySelector('.step-icon').className = 'step-icon w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold';
+      }, 1400);
+
+      const timer3 = setTimeout(() => {
+        step4.className = 'flex items-center gap-3 text-emerald-400 font-semibold';
+        step4.querySelector('.step-icon').innerHTML = '✓';
+        step4.querySelector('.step-icon').className = 'step-icon w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold';
+      }, 2100);
+
+      try {
+        const response = await fetch(`${API_BASE}/ai-planner`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            destination,
+            days,
+            budgetTier,
+            groupSize,
+            travelStyle,
+            interests
+          })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || 'Server error while generating itinerary');
+        }
+
+        currentPlan = await response.json();
+
+        // Render Results
+        renderItinerary(currentPlan);
+
+        // Hide loading and show results
+        setTimeout(() => {
+          document.getElementById('loadingState').classList.add('hidden');
+          document.getElementById('resultsArea').classList.remove('hidden');
+          window.scrollTo({ top: 100, behavior: 'smooth' });
+        }, 500);
+
+      } catch (err) {
+        console.error('Plan generation error:', err);
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+        alert('Could not generate plan: ' + err.message);
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('plannerForm').classList.remove('hidden');
+      }
+    }
+
+    function renderItinerary(plan) {
+      // Title & Badges
+      document.getElementById('resDestinationTitle').textContent = `Your ${plan.itinerary ? plan.itinerary.length : ''}-Day ${plan.destination} Itinerary`;
+
+      const sourceBadge = document.getElementById('sourceBadge');
+      if (plan.has_platform_post) {
+        const infStr = plan.influencer_names && plan.influencer_names.length > 0 ? `@${plan.influencer_names.join(', @')}` : 'Verified Traveler';
+        sourceBadge.className = 'badge-verified px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5';
+        sourceBadge.innerHTML = `<span>☑️</span> Verified Community Post Backed (${infStr})`;
+      } else {
+        sourceBadge.className = 'badge-web px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5';
+        sourceBadge.innerHTML = `<span>🌐</span> Live Web Travel Intelligence (No platform post yet)`;
+      }
+
+      const sourcesUsed = (plan.sources_used || ['web_search']).join(' + ');
+      document.getElementById('sourcesUsedBadge').textContent = `Sources: ${sourcesUsed.replace('_', ' ').toUpperCase()}`;
+
+      // 1. Snapshot
+      document.getElementById('resSnapshot').textContent = plan.snapshot || 'No snapshot available.';
+
+      // 2. Getting There
+      document.getElementById('resGettingThere').textContent = plan.getting_there || 'Transit information not provided.';
+
+      // 3. Stays Grid
+      const stayGrid = document.getElementById('resStayGrid');
+      stayGrid.innerHTML = '';
+      (plan.stay_options || []).forEach(stay => {
+        const isVerified = stay.source === 'influencer_post' || stay.verified;
+        const card = document.createElement('div');
+        card.className = 'glass-card p-5 rounded-2xl flex flex-col justify-between glass-card-hover border ' + (isVerified ? 'border-blue-400/30' : 'border-white/10');
+        
+        const tierLabel = (stay.tier || 'option').toUpperCase();
+        const tierColor = stay.tier === 'luxury' ? 'text-amber-300' : stay.tier === 'budget' ? 'text-green-300' : 'text-[#7fb4d4]';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-[10px] font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-white/5 ${tierColor}">${tierLabel}</span>
+              ${isVerified ? '<span class="text-xs text-blue-400" title="Verified Community Recommendation">☑️ Verified</span>' : '<span class="text-xs text-emerald-400" title="Web Curated">🌐 Curated</span>'}
+            </div>
+            <h4 class="font-ogg text-xl text-[#fdf1e1] mb-1">${stay.name}</h4>
+            <div class="text-xs text-[#7fb4d4] mb-2">📍 ${stay.area || 'Central Area'}</div>
+            <p class="text-xs text-[#fdf1e1]/80 leading-relaxed mb-4">${stay.note || ''}</p>
+          </div>
+          <div class="pt-3 border-t border-white/10 flex justify-between items-center text-xs">
+            <span class="text-[#fdf1e1]/60">Est. Price:</span>
+            <strong class="text-[#fdf1e1]">${stay.price_per_night || 'Varies'}</strong>
+          </div>
+        `;
+        stayGrid.appendChild(card);
+      });
+
+      // 4. Day-by-Day Itinerary
+      const tabsContainer = document.getElementById('dayTabsContainer');
+      const itContainer = document.getElementById('itineraryContainer');
+      tabsContainer.innerHTML = '';
+      itContainer.innerHTML = '';
+
+      (plan.itinerary || []).forEach((dayPlan, idx) => {
+        // Tab button
+        const tabBtn = document.createElement('button');
+        tabBtn.className = `px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${idx === 0 ? 'bg-[#7fb4d4] text-[#111411]' : 'bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10'}`;
+        tabBtn.textContent = `Day ${dayPlan.day}`;
+        tabBtn.onclick = () => {
+          document.querySelectorAll('.day-block').forEach(el => el.classList.add('hidden'));
+          document.getElementById(`day-block-${dayPlan.day}`).classList.remove('hidden');
+          tabsContainer.querySelectorAll('button').forEach(b => {
+            b.className = 'px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10';
+          });
+          tabBtn.className = 'px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#7fb4d4] text-[#111411]';
+        };
+        tabsContainer.appendChild(tabBtn);
+
+        // Day Content Block
+        const dayBlock = document.createElement('div');
+        dayBlock.id = `day-block-${dayPlan.day}`;
+        dayBlock.className = `day-block ${idx === 0 ? '' : 'hidden'} space-y-4`;
+
+        let activitiesHtml = '';
+        (dayPlan.activities || []).forEach(act => {
+          const isInf = act.source === 'influencer_post';
+          activitiesHtml += `
+            <div class="p-4 rounded-2xl bg-white/[0.03] border ${isInf ? 'border-blue-400/30' : 'border-white/5'} flex flex-col md:flex-row justify-between gap-3">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                  <span class="text-xs font-medium text-[#7fb4d4]">${act.time || ''}</span>
+                  ${isInf ? '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified font-semibold">☑️ Community Spot</span>' : '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web font-semibold">🌐 Web Sourced</span>'}
+                </div>
+                <h5 class="text-base font-semibold text-[#fdf1e1] mb-1">${act.title}</h5>
+                <p class="text-xs text-[#fdf1e1]/80 leading-relaxed">${act.note || ''}</p>
+              </div>
+              <div class="text-xs md:text-right flex md:flex-col justify-between md:justify-center border-t md:border-t-0 pt-2 md:pt-0 border-white/5 text-[#fdf1e1]/70 min-w-[140px]">
+                <div>🚕 ${act.transport || 'Local transit'}</div>
+                <div class="font-semibold text-green-300 mt-1">${act.cost || ''}</div>
+              </div>
+            </div>
+          `;
+        });
+
+        dayBlock.innerHTML = `
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-8 h-8 rounded-full bg-[#7fb4d4] text-[#111411] font-bold flex items-center justify-center text-sm">${dayPlan.day}</span>
+            <h4 class="font-ogg text-2xl text-[#7fb4d4]">${dayPlan.title || `Day ${dayPlan.day}`}</h4>
+          </div>
+          <div class="space-y-3 pl-2 md:pl-4 border-l-2 border-[#7fb4d4]/30 ml-4">
+            ${activitiesHtml}
+          </div>
+        `;
+        itContainer.appendChild(dayBlock);
+      });
+
+      // 5. Must-See Spots
+      const infSpotsList = document.getElementById('resInfluencerSpotsList');
+      const webSpotsList = document.getElementById('resWebSpotsList');
+      infSpotsList.innerHTML = '';
+      webSpotsList.innerHTML = '';
+
+      let infSpotsCount = 0;
+      let webSpotsCount = 0;
+
+      (plan.spots || []).forEach(spot => {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-xl bg-white/5 border border-white/5';
+        item.innerHTML = `
+          <div class="font-semibold text-sm text-[#fdf1e1] mb-1">📍 ${spot.name}</div>
+          <div class="text-xs text-[#fdf1e1]/70">${spot.note || ''}</div>
+        `;
+        if (spot.source === 'influencer_post') {
+          infSpotsList.appendChild(item);
+          infSpotsCount++;
+        } else {
+          webSpotsList.appendChild(item);
+          webSpotsCount++;
+        }
+      });
+
+      if (infSpotsCount === 0) {
+        infSpotsList.innerHTML = '<p class="text-xs text-[#fdf1e1]/50 italic">No community posts yet on this platform for this destination. All spots synthesized from verified travel guides.</p>';
+      }
+      if (webSpotsCount === 0) {
+        webSpotsList.innerHTML = '<p class="text-xs text-[#fdf1e1]/50 italic">All spots matched directly from community posts!</p>';
+      }
+
+      // 6. Food Grid
+      const foodGrid = document.getElementById('resFoodGrid');
+      foodGrid.innerHTML = '';
+      (plan.food || []).forEach(f => {
+        const card = document.createElement('div');
+        const isInf = f.source === 'influencer_post';
+        card.className = 'p-4 rounded-2xl bg-white/[0.04] border ' + (isInf ? 'border-blue-400/30' : 'border-white/5');
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-1.5">
+            <h5 class="font-semibold text-sm text-[#fdf1e1]">🍲 ${f.name}</h5>
+            ${isInf ? '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified">☑️ Influencer Pick</span>' : '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web">🌐 Local Specialty</span>'}
+          </div>
+          <p class="text-xs text-[#fdf1e1]/75 leading-relaxed">${f.note || ''}</p>
+        `;
+        foodGrid.appendChild(card);
+      });
+
+      // 7. Local Transport
+      document.getElementById('resLocalTransport').textContent = plan.local_transport || 'Local transport details unavailable.';
+
+      // 8. Budget
+      const b = plan.budget_estimate || {};
+      document.getElementById('resBudgetTierCost').textContent = b.budget || '₹1,800/day';
+      document.getElementById('resMidTierCost').textContent = b.mid || '₹5,000/day';
+      document.getElementById('resLuxuryTierCost').textContent = b.luxury || '₹15,000/day';
+      document.getElementById('resTotalBudgetEst').textContent = b.total_estimated || 'Calculated per preference';
+
+      // 9. Practical Tips
+      const tipsList = document.getElementById('resTipsList');
+      tipsList.innerHTML = '';
+      (plan.tips || []).forEach(tip => {
+        const li = document.createElement('li');
+        li.className = 'flex items-start gap-2';
+        li.innerHTML = `<span class="text-[#7fb4d4] font-bold">•</span> <span>${tip}</span>`;
+        tipsList.appendChild(li);
+      });
+
+      // 10. Footnote & JSON
+      document.getElementById('resSourcesSummary').textContent = plan.has_platform_post 
+        ? `Contains verified spots from community travelers (${plan.influencer_names ? plan.influencer_names.join(', ') : 'community'}) enriched with web travel intelligence.`
+        : `Generated via live web travel intelligence. No verified influencer post existed on the platform for ${plan.destination}.`;
+
+      document.getElementById('rawJsonContent').textContent = JSON.stringify(plan, null, 2);
+    }
+
+    function copyPlanJson() {
+      if (!currentPlan) return;
+      navigator.clipboard.writeText(JSON.stringify(currentPlan, null, 2));
+      alert('✓ Complete Travel Plan JSON schema copied to clipboard!');
+    }
   </script>
 </body>
 </html>

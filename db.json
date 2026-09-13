@@ -6,6 +6,46 @@
       "username": "omtiwari02",
       "email": "som1094@gmail.com",
       "password": "omtiwari02"
+    },
+    {
+      "id": 1789330130571,
+      "name": "Pro User 1",
+      "username": "pro_creator_1",
+      "email": "pro1@test.com",
+      "password": "123",
+      "role": "professional",
+      "is_verified_pro": true,
+      "aadhaar_no": "548912049832",
+      "followers_count": 0,
+      "created_at": "2026-09-13T20:08:50.571Z",
+      "face_scan_verified": true,
+      "verified_at": "2026-09-13T20:08:50.668Z"
+    },
+    {
+      "id": 1789330130752,
+      "name": "Pro User 2",
+      "username": "pro_creator_2",
+      "email": "pro2@test.com",
+      "password": "123",
+      "role": "professional",
+      "is_verified_pro": false,
+      "aadhaar_no": null,
+      "followers_count": 0,
+      "created_at": "2026-09-13T20:08:50.752Z"
+    },
+    {
+      "id": 1789330242907,
+      "name": "Aarav Sharma",
+      "username": "aarav_travels",
+      "email": "aarav@test.com",
+      "password": "12345678",
+      "role": "professional",
+      "is_verified_pro": true,
+      "aadhaar_no": "832828882933",
+      "followers_count": 0,
+      "created_at": "2026-09-13T20:10:42.907Z",
+      "face_scan_verified": true,
+      "verified_at": "2026-09-13T20:10:57.807Z"
     }
   ],
   "posts": [
@@ -36,5 +76,91 @@
   ],
   "comments": [],
   "likes": [],
-  "follows": []
+  "follows": [],
+  "businesses": [
+    {
+      "id": 1789329579376,
+      "name": "Test Royal Cafe",
+      "category": "food",
+      "location": "Jaipur, Rajasthan",
+      "website": "https://testcafe.com",
+      "phone": "+91 99999 88888",
+      "price_range": "₹200 - ₹500",
+      "rating": "4.9",
+      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+      "description": "Cozy rooftop cafe",
+      "menu_items": "• Cold Coffee: ₹120\n• Pasta: ₹250",
+      "created_at": "2026-09-13T19:59:39.376Z"
+    },
+    {
+      "id": 1,
+      "name": "Zostel Jaipur & Heritage Stay",
+      "category": "travel",
+      "location": "Jaipur, Rajasthan",
+      "website": "https://www.zostel.com/zostel/jaipur/",
+      "phone": "+91 73000 83737",
+      "price_range": "₹800 - ₹2,200/night",
+      "rating": "4.9",
+      "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+      "description": "Lively backpacker hostel and private rooms with rooftop cafe, outdoor plunge pool, and walkable distance to Hawa Mahal.",
+      "menu_items": "• Female & Mixed Dorm Beds: ₹800/night\n• Private Deluxe Haveli Room: ₹2,200/night\n• Masala Chai & Bun Muska: ₹90\n• Rooftop Woodfired Pizza: ₹350\n• Free High-Speed WiFi & Co-working Space Included",
+      "created_at": "2026-09-10T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Himalayan Riders Bike & Scooter Rentals",
+      "category": "transport",
+      "location": "Manali, Himachal Pradesh",
+      "website": "https://himalayanriders.in",
+      "phone": "+91 98160 55432",
+      "price_range": "₹600 - ₹1,800/day",
+      "rating": "4.8",
+      "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=80&w=800",
+      "description": "Premium motorcycle and scooty rental agency for Old Manali, Solang Valley, Atal Tunnel, and Spiti circuits.",
+      "menu_items": "• Honda Activa (Automatic): ₹600/day\n• Royal Enfield Himalayan 411cc: ₹1,500/day\n• Royal Enfield Classic 350cc: ₹1,200/day\n• Riding Jackets & Gloves Rental: ₹200/day",
+      "created_at": "2026-09-11T12:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Pink City Forts & Heritage Walking Tour",
+      "category": "tours",
+      "location": "Jaipur, Rajasthan",
+      "website": "https://jaipurheritagetours.in",
+      "phone": "+91 94140 12345",
+      "price_range": "₹850 - ₹1,500/person",
+      "rating": "4.9",
+      "image": "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&q=80&w=800",
+      "description": "Guided walking and photography tour through Amer Fort, City Palace, Johari Bazaar artisan workshops, and secret sunset viewpoints.",
+      "menu_items": "• Old City Heritage & Street Food Walk (3 hrs): ₹850/person\n• Amer Fort & Sheesh Mahal Deep Dive (Half-day): ₹1,200/person\n• Royal Sunset Photography Tour at Nahargarh: ₹1,500/person",
+      "created_at": "2026-09-12T14:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Goa Beach & Watersports All-Inclusive Package",
+      "category": "packages",
+      "location": "Goa",
+      "website": "https://goawatersports.com",
+      "phone": "+91 98221 44556",
+      "price_range": "₹2,500 - ₹5,999/package",
+      "rating": "4.7",
+      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800",
+      "description": "Full-day Calangute & Baga adventure package including jet ski, parasailing, banana ride, bumper ride, and buffet lunch.",
+      "menu_items": "• 5-in-1 Watersports Combo: ₹2,500/person\n• Parasailing with Dip + Jet Ski + Speedboat: ₹3,200/person\n• Scuba Diving at Malvan with Underwater Video: ₹4,500/person",
+      "created_at": "2026-09-13T09:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Johny Hot Dog & Chappan Food Joint",
+      "category": "food",
+      "location": "Indore, Madhya Pradesh",
+      "website": "https://chappanindore.in/johny-hot-dog",
+      "phone": "+91 98270 11223",
+      "price_range": "₹40 - ₹180/dish",
+      "rating": "5.0",
+      "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800",
+      "description": "Iconic Indori street food pioneer at 56 Dukan serving famous Mutton & Egg Hotdogs, Veg Cheese Banjo, and authentic Poha-Jalebi.",
+      "menu_items": "• Mutton Hot Dog: ₹90\n• Veg Cheese Banjo: ₹60\n• Egg Bhurji Roll: ₹75\n• Special Indori Poha & Sev: ₹40\n• Desi Ghee Jalebi (100g): ₹50\n• Kulhad Masala Chai: ₹20",
+      "created_at": "2026-09-14T08:00:00.000Z"
+    }
+  ]
 }

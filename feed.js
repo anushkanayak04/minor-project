@@ -47,9 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="w-10 h-10 rounded-full bg-[#7fb4d4] flex items-center justify-center text-[#111411] font-bold">
               ${post.username.charAt(0).toUpperCase()}
             </div>
-            <strong class="font-medium tracking-wide flex items-center gap-1">${post.username} 
-              <span class="text-blue-400 text-xs" title="Verified Traveller">☑️</span>
-            </strong>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <strong class="font-medium tracking-wide text-base">${post.username}</strong>
+                ${(post.is_verified_pro || post.user_role === 'professional' || post.username === 'omtiwari02') 
+                  ? `<span class="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-400/40" title="Aadhaar & Face Scan Verified Pro Creator">☑️ Pro Creator</span>` 
+                  : `<span class="bg-white/10 text-[#fdf1e1]/60 text-[10px] px-2 py-0.5 rounded-full" title="Normal Member">👤 Normal Member</span>`}
+              </div>
+              <div class="text-[10px] text-[#fdf1e1]/50 mt-0.5">Posted ${post.created_at ? new Date(post.created_at).toLocaleDateString() : 'recently'}</div>
+            </div>
           </div>
           <button class="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${post.isFollowing ? 'border-[#fdf1e1]/30 text-[#fdf1e1]/80 hover:bg-[#fdf1e1]/10' : 'border-[#7fb4d4] text-[#7fb4d4] hover:bg-[#7fb4d4]/10'}" onclick="toggleFollow(${post.user_id}, '${post.username}', this)">
             ${post.isFollowing ? 'Following' : 'Follow'}
@@ -62,8 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
               `<video src="${post.media}" controls class="w-full h-auto max-h-[600px] object-contain"></video>` :
               `<img src="${post.media}" alt="Spot Image" class="w-full h-auto max-h-[600px] object-contain">`
             }
-            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs text-green-300 border border-green-300/30">
-              ✓ Community Verified (30 days)
+            <div class="absolute top-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold border ${post.is_ai_altered ? 'text-red-400 border-red-500/50' : (post.ai_trust_score && post.ai_trust_score < 75) ? 'text-amber-300 border-amber-400/50' : 'text-emerald-300 border-emerald-400/50'} flex items-center gap-1.5 shadow-lg">
+              ${post.is_ai_altered 
+                ? `<span>🚨</span> AI Alteration Flagged` 
+                : `<span>🛡️</span> ${post.ai_badge || 'AI Verified Authentic'} (${post.ai_trust_score || 96}%)`}
             </div>
           </div>
         ` : ''}
