@@ -410,6 +410,37 @@ app.delete('/api/businesses/:id', (req, res) => {
   }
 });
 
+// SOS Emergency Trigger Route
+app.post('/api/sos/trigger', (req, res) => {
+  try {
+    const alertData = req.body;
+    const db = readDB();
+    
+    if (!db.sos_alerts) db.sos_alerts = [];
+    
+    const newAlert = {
+      id: Date.now(),
+      username: alertData.username || 'Unknown',
+      location: alertData.location,
+      coordinates: alertData.coordinates,
+      dangerScore: alertData.dangerScore,
+      timestamp: alertData.timestamp || new Date().toISOString()
+    };
+    
+    db.sos_alerts.push(newAlert);
+    writeDB(db);
+    
+    // Simulate broadcasting to nearby devices by responding with success
+    res.json({ 
+      status: 'success', 
+      message: 'SOS alert received and simulated broadcast to nearby devices.' 
+    });
+  } catch (err) {
+    console.error('Error handling SOS trigger:', err);
+    res.status(500).json({ error: 'Failed to process SOS alert' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at: http://localhost:${PORT}`);

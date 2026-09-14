@@ -234,7 +234,7 @@
   </div>
 
   <script>
-    const API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
+    var API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
     let allBusinesses = [];
     let activeCategory = 'all';
 
@@ -486,5 +486,6 @@
       document.getElementById('menuModal').classList.remove('hidden');
     }
   </script>
+  <script src="sosEngine.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
  * - Emergency Contact Dispatch & Nearby App User Mesh Trigger
  */
 
-const API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
+var API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
 
 class SOSEngine {
   constructor() {
