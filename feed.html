@@ -3,177 +3,747 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feed - bro said he knows a spot</title>
+  <title>Field Notes | Know a Spot</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
   <link rel="stylesheet" href="feed.css">
   <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
   <script src="smooth-scroll.js"></script>
 </head>
-<body class="bg-transparent text-[#fdf1e1] antialiased">
-  
-  <!-- Navigation -->
-  <nav class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 glass-nav">
-    <div class="flex-1">
-      <!-- Removed Brand text to keep it clean -->
-    </div>
-    
-    <div class="flex-1 flex justify-center">
-      <div class="relative w-full max-w-md">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg class="w-4 h-4 text-[#fdf1e1]/60" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-          </svg>
-        </div>
-        <input type="text" id="searchInput" class="glass-input block w-full p-2 pl-10 text-sm rounded-full placeholder-[#fdf1e1]/60 focus:outline-none focus:ring-2 focus:ring-[#7fb4d4]/50" placeholder="Search locations or users...">
-      </div>
-    </div>
-    
-    <div class="flex-1 flex justify-end items-center gap-6">
-      <a href="planner.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">AI Planner</a>
-      <a href="dashboard.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Dashboard</a>
-      <a href="businesses.html" class="text-sm font-medium hover:text-[#7fb4d4] transition-colors">Business</a>
-      <button id="createPostBtn" class="text-2xl hover:scale-110 transition-transform hover:text-[#7fb4d4]" title="Create Post">+</button>
-      <button id="chatBtn" class="text-xl hover:scale-110 transition-transform" title="Chat">💬</button>
-      <div class="w-9 h-9 rounded-full bg-[#7fb4d4] text-[#111411] flex items-center justify-center font-bold cursor-pointer hover:ring-2 ring-white/50" id="profileIcon">👤</div>
-    </div>
-  </nav>
+<body class="antialiased">
 
-  <!-- Platform Trust Notice Banner -->
-  <div class="max-w-2xl mx-auto mt-6 px-4">
-    <div class="glass-modal p-4 rounded-2xl border border-blue-400/30 flex items-start gap-3 shadow-lg">
-      <div class="text-2xl">🛡️</div>
-      <div class="text-xs text-[#fdf1e1]/85 leading-relaxed">
-        <strong class="text-blue-300 block text-sm mb-0.5">Platform Verification & Trust Disclaimer</strong>
-        For authentic travel, hotel, and transport information, look for <strong>Verified Pro Creators (☑️)</strong> who completed Aadhaar & Face Scan verification (1-account limit). All uploads undergo live AI image alteration & promotion sentiment analysis.
+  <div class="app-container">
+
+    <!-- Primary navigation is provided by the bottom bar -->
+
+    <!-- 3. MAIN FEED VIEWPORT -->
+    <main class="feed-main-viewport">
+      <div class="feed-column">
+
+        <!-- Guest sign-in prompt -->
+        <div class="guest-login-banner hidden" id="guestLoginBanner">
+          <span class="text-xl">◈</span>
+          <div class="flex-1">
+            <strong class="text-xs text-white block">Sign in to like, comment and share spots</strong>
+            <span class="text-[11px] text-white/60">Browsing stays free — no account needed.</span>
+          </div>
+          <a href="auth.html?mode=login" class="guest-login-btn">Log in</a>
+        </div>
+
+        <!-- Community field updates -->
+        <section class="stories-tray-container" id="storiesTray" aria-label="Community updates">
+          <!-- Add a field update -->
+          <div class="story-bubble" id="createStoryBubble" title="Share a 24-hour field update">
+            <div class="story-ring-wrap user-create">
+              <img id="userStoryAvatar" src="" class="story-avatar-img" alt="Your field update">
+              <span class="story-add-badge">+</span>
+            </div>
+            <span class="story-author-name">Add an update</span>
+          </div>
+
+          <!-- Traveler updates -->
+          <div id="storiesListWrap" class="flex items-center gap-4"></div>
+        </section>
+
+        <!-- MAIN POSTS FEED -->
+        <div class="flex flex-col gap-6" id="feedContainer">
+          <!-- Injected via feed.js -->
+        </div>
+
+        <!-- EXPLORE GRID VIEW (TOGGLED VIA EXPLORE TAB) -->
+        <div class="hidden" id="exploreView">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-ogg text-xl text-[#d2a35c]">Explore Trending Spots</h2>
+            <span class="text-xs text-white/60">3x3 Photo Grid View</span>
+          </div>
+          <div class="explore-grid-container" id="exploreGrid"></div>
+        </div>
+
+        <!-- FIELD GUIDE REELS VIEW -->
+        <div class="hidden" id="reelsView">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-ogg text-xl text-[#d2a35c]">Motion Notes</h2>
+            <span class="text-xs text-white/60" id="reelsCountLabel">0 notes</span>
+          </div>
+          <div class="reels-scroll-container" id="reelsContainer"></div>
+        </div>
+
       </div>
+
+      <!-- 4. RIGHT SIDEBAR (DESKTOP) -->
+      <aside class="feed-right-sidebar">
+        
+        <!-- User Profile Card -->
+        <div class="current-user-widget">
+          <div class="user-widget-profile">
+            <img id="rightWidgetAvatar" src="" class="user-widget-avatar" alt="Avatar">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-sm text-white" id="rightWidgetUsername">traveler</span>
+              <span id="rightWidgetBadge" class="hidden text-xs text-[#d2a35c]">✓</span>
+              </div>
+              <span class="text-xs text-white/60" id="rightWidgetName">Travel Explorer</span>
+            </div>
+          </div>
+          <a href="auth.html?mode=login" class="switch-account-link">Switch</a>
+        </div>
+
+        <!-- Upgrade to Pro Creator Widget (Visible if not verified) -->
+        <div id="feedUpgradeProWidget" class="glass-panel p-3.5 rounded-2xl border border-[#d2a35c]/35 bg-[#d2a35c]/5 space-y-2 hidden">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">✓</span>
+            <div>
+              <strong class="text-xs text-white block">Become a Pro Creator</strong>
+              <p class="text-[11px] text-white/70">Verify Aadhaar to unlock verified checkmarks & priority spot reach.</p>
+            </div>
+          </div>
+          <a href="auth.html?verify_pro=true" class="block text-center w-full bg-[#d2a35c] text-[#070c0a] font-bold py-2 rounded-xl text-xs hover:bg-[#e6c78e] transition-all shadow-md shadow-[#d2a35c]/20">
+            Verify as Pro Creator →
+          </a>
+        </div>
+
+        <!-- Suggested travelers -->
+        <div class="suggestions-card">
+          <div class="suggestions-header">
+            <span>Suggested for you</span>
+            <button class="text-xs text-[#d2a35c] hover:underline font-semibold" id="seeAllSuggestionsBtn">See All</button>
+          </div>
+
+          <div class="space-y-3" id="suggestionsContainer">
+            <!-- Suggested users injected via JS -->
+          </div>
+        </div>
+
+        <!-- Trending Spots Widget -->
+        <div class="glass-panel p-4 rounded-2xl space-y-2.5">
+          <div class="flex items-center justify-between text-xs font-semibold text-white/70">
+            <span>Trending Spots & Tags</span>
+            <span class="text-[#d2a35c] font-bold">Live</span>
+          </div>
+          <div class="space-y-1.5 text-xs" id="trendingTagsList">
+            <p class="text-[11px] text-white/45 py-1">No trending tags yet. They appear as travelers post.</p>
+          </div>
+          <div class="space-y-1.5 text-xs mt-3 pt-3 border-t border-white/5" id="trendingLocationsList">
+            <p class="text-[11px] text-white/45 py-1">No popular destinations yet.</p>
+          </div>
+        </div>
+
+        <!-- Emergency Distress Button -->
+        <div class="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">⚑</span>
+            <div>
+              <strong class="text-xs text-red-300 block font-semibold">Traveler SOS Network</strong>
+              <span class="text-[10px] text-white/70">1-Click emergency distress broadcast</span>
+            </div>
+          </div>
+          <button id="quickSosBtn" class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg transition-colors">SOS</button>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="text-[11px] text-white/40 space-y-2 leading-relaxed">
+          <div class="flex flex-wrap gap-x-3 gap-y-1">
+            <a href="planner.html" class="hover:text-white">AI Planner</a>
+            <a href="dashboard.html" class="hover:text-white">Dashboard</a>
+            <a href="businesses.html" class="hover:text-white">Businesses</a>
+            <a href="#" class="hover:text-white" id="trustFooterLink">Trust & Safety</a>
+          </div>
+          <div>© 2026 KNOW A SPOT · FIELD NOTES FROM REAL TRAVELERS</div>
+        </div>
+
+      </aside>
+    </main>
+
+    <!-- 5. MOBILE BOTTOM NAV BAR -->
+    <nav class="mobile-bottom-nav" aria-label="Primary navigation">
+      <button class="bottom-nav-item active" id="mobNavHome" type="button" title="Home" aria-label="Home">
+        <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+      </button>
+      <button class="bottom-nav-item" id="mobNavSearch" type="button" title="Search and explore" aria-label="Search and explore">
+        <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      </button>
+      <button class="bottom-nav-item bottom-nav-create" id="mobNavCreate" type="button" title="Create" aria-label="Create">
+        <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="bottom-nav-item bottom-nav-profile" id="mobNavProfile" type="button" title="Profile" aria-label="Profile">
+        <img id="bottomNavUserAvatar" src="" alt="Profile photo">
+      </button>
+      <button class="bottom-nav-item" id="mobNavNotifications" type="button" title="Notifications" aria-label="Notifications">
+        <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+        <span class="nav-badge-pill hidden bottom-nav-badge" id="mobUnreadNotifBadge">0</span>
+      </button>
+      <button class="bottom-nav-item" id="mobNavMessages" type="button" title="Messages" aria-label="Messages">
+        <svg class="bottom-nav-icon bottom-nav-plane" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-8-7 18-3-7zM11 14l10-11"/></svg>
+        <span class="nav-badge-pill hidden bottom-nav-badge" id="mobUnreadMsgBadge">0</span>
+      </button>
+    </nav>
+    <button id="mobileSosBtn" class="mobile-sos-button" type="button" aria-label="Send an SOS alert">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22 21H2L12 3Z"/><path d="M12 9v5m0 3h.01"/></svg>
+      <span>SOS</span>
+    </button>
+
+  </div>
+
+  <div id="sosConfirmModal" class="fixed inset-0 z-[1300] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="sosModalTitle">
+    <section class="w-full max-w-sm rounded-2xl border border-red-400/30 bg-[#101714] p-5 text-white shadow-2xl">
+      <div class="mb-3 flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full border border-red-400/30 bg-red-500/15 text-red-300" aria-hidden="true">!</span>
+        <h2 id="sosModalTitle" class="text-lg font-bold">Send an SOS alert?</h2>
+      </div>
+      <p class="mb-4 text-sm leading-relaxed text-white/70">Spot will record an emergency alert. It does not contact emergency services or guarantee a live response. Call your local emergency number for immediate help.</p>
+      <label class="mb-4 flex cursor-pointer items-start gap-2 text-sm text-white/80">
+        <input id="sosShareLocation" type="checkbox" class="mt-1 accent-red-500">
+        <span>Include my current location if available</span>
+      </label>
+      <p id="sosModalStatus" class="mb-3 hidden text-xs text-white/65" role="status" aria-live="polite"></p>
+      <div class="flex justify-end gap-2">
+        <button id="sosCancelBtn" type="button" class="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/75 hover:bg-white/5">Cancel</button>
+        <button id="sosSendBtn" type="button" class="rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-500">Send alert</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Community update viewer -->
+  <div class="story-viewer-modal" id="storyViewerModal">
+    <div class="story-screen-card">
+      
+      <!-- Progress Bar Segments -->
+      <div class="story-progress-bar-wrap" id="storyProgressSegments">
+        <!-- Dynamically injected segmented bars for each story -->
+      </div>
+      <!-- Header Overlay -->
+      <div class="story-header-overlay">
+        <div class="story-author-info">
+          <img id="storyViewerAvatar" src="" class="w-8 h-8 rounded-full border border-white object-cover" alt="User">
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-white" id="storyViewerUsername">username</span>
+              <span id="storyViewerProBadge" class="text-[10px] text-[#d2a35c]">✓</span>
+            </div>
+            <span class="text-[10px] text-white/80 block" id="storyViewerSpot">⌖ Spot Location</span>
+          </div>
+          <span class="text-[10px] text-white/60 ml-2" id="storyViewerTime">2h</span>
+        </div>
+        <button class="story-close-btn" id="closeStoryViewerBtn">&times;</button>
+      </div>
+
+      <!-- Media Canvas -->
+      <div class="flex-1 w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
+        <img id="storyViewerMedia" src="" class="w-full h-full object-cover select-none pointer-events-none" alt="Travel update">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 pointer-events-none"></div>
+        <div class="story-nav-tap story-nav-prev" id="storyTapPrev" title="Previous update"></div>
+        <div class="story-nav-tap story-nav-next" id="storyTapNext" title="Next update"></div>
+        
+        <!-- Story Caption -->
+        <div class="absolute bottom-16 left-4 right-4 text-white text-xs font-medium z-20 pointer-events-none" id="storyViewerCaption"></div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="story-bottom-action-bar">
+        <input type="text" placeholder="Reply to this update (press Enter)..." class="glass-input flex-1 p-2 rounded-full text-xs text-white placeholder-white/50" id="storyReplyInput">
+        <div class="flex gap-1.5 text-base">
+          <button class="hover:scale-125 transition-transform" onclick="sendStoryReaction('✦')">✦</button>
+          <button class="hover:scale-125 transition-transform" onclick="sendStoryReaction('♥')">♥</button>
+          <button class="hover:scale-125 transition-transform" onclick="sendStoryReaction('◎')">◎</button>
+          <button class="hover:scale-125 transition-transform" onclick="sendStoryReaction('✧')">✧</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Main Feed -->
-  <main class="max-w-2xl mx-auto my-6 px-4 flex flex-col gap-8" id="feedContainer">
-    <!-- Posts will be injected here by JS -->
-  </main>
-
-  <!-- Create Post Wizard Modal -->
-  <div id="createPostModal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
-    <div class="glass-modal w-[90%] max-w-lg rounded-2xl flex flex-col overflow-hidden relative shadow-2xl">
-      <div class="flex justify-between items-center p-5 border-b border-[#fdf1e1]/10">
-        <div class="w-8"></div>
-        <h2 id="wizardTitle" class="text-lg font-medium tracking-wide">Create Post - Step 1/4</h2>
-        <button class="text-3xl leading-none text-[#fdf1e1]/60 hover:text-white" id="closeCreateModal">&times;</button>
+  <!-- Create a field note -->
+  <div id="createPostModal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-lg rounded-3xl flex flex-col overflow-hidden relative shadow-2xl bg-[#0c1613]">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-4 border-b border-white/10">
+        <button type="button" class="text-xs text-[#d2a35c] font-bold" id="wizardCancelBtn">Cancel</button>
+        <h2 id="wizardTitle" class="text-sm font-bold tracking-wide text-white">Create New Spot Post (Step 1/4)</h2>
+        <button class="text-2xl leading-none text-white/60 hover:text-white" id="closeCreateModal">&times;</button>
       </div>
       
-      <form id="createPostForm" class="flex flex-col flex-1 max-h-[75vh]">
-        <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
-          <!-- Step 1: Location & Media -->
+      <form id="createPostForm" class="flex flex-col flex-1 max-h-[80vh]">
+        <div class="p-5 overflow-y-auto flex-1 custom-scrollbar space-y-4">
+          
+          <!-- Step 1: Media Upload & Aspect Ratio -->
           <div class="wizard-step block" id="step1">
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Upload Photo/Video</label>
-              <div class="glass-input flex items-center justify-center w-full h-32 rounded-xl border-dashed border-2 border-[#fdf1e1]/30 hover:border-[#7fb4d4] cursor-pointer relative overflow-hidden group">
-                <input type="file" id="postMediaFile" accept="image/*,video/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center z-0">
-                  <svg class="w-8 h-8 mb-3 text-[#fdf1e1]/60 group-hover:text-[#7fb4d4] transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                  </svg>
-                  <p class="mb-1 text-sm text-[#fdf1e1]/80 group-hover:text-white"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+            <div class="mb-4">
+              <label class="block text-xs font-semibold mb-1.5 text-white/90">Add field photos</label>
+              <div class="glass-input flex flex-col items-center justify-center w-full h-44 rounded-2xl border-dashed border-2 border-white/25 hover:border-[#d2a35c] cursor-pointer relative overflow-hidden group">
+                <input type="file" id="postMediaFile" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="Choose field photos">
+                <div class="flex flex-col items-center justify-center p-4 text-center z-0" id="uploadPlaceholder">
+                  <span class="text-3xl mb-2">◉</span>
+                  <p class="text-xs font-bold text-white">Choose or drop up to 8 photos</p>
+                  <p class="text-[10px] text-white/60 mt-1" id="uploadSelectionStatus">JPG, PNG or WebP · up to 30 MB total</p>
                 </div>
+                <p id="mediaErrorMsg" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 z-20 text-[11px] font-semibold text-red-300 bg-black/70 px-2.5 py-1 rounded-lg">Add a photo to continue.</p>
                 <img id="mediaPreview" class="hidden absolute inset-0 w-full h-full object-cover z-0">
               </div>
             </div>
 
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Location</label>
+            <div class="mb-3">
+              <label class="block text-xs font-semibold mb-1 text-white/90">Or Paste Image URL</label>
+              <input type="url" id="postMediaUrl" placeholder="Paste an image URL" class="glass-input w-full p-2.5 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-white/90">Spot Caption & Hashtags</label>
+              <textarea id="postDescription" rows="3" placeholder="Tell travelers about this secret spot... #HiddenGem" class="glass-input w-full p-3 text-xs"></textarea>
+            </div>
+          </div>
+
+          <!-- Step 2: Photo tone -->
+          <div class="wizard-step hidden" id="step2">
+            <h3 class="text-xs uppercase tracking-wider text-[#d2a35c] font-bold mb-3">Choose a photo tone</h3>
+            
+            <div class="w-full h-44 rounded-2xl overflow-hidden mb-4 bg-black flex items-center justify-center border border-white/10">
+              <img id="filterPreviewImg" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='440'%3E%3Crect width='600' height='440' fill='%230f1a17'/%3E%3Ctext x='300' y='225' fill='%23ffffff' fill-opacity='0.45' font-family='sans-serif' font-size='22' text-anchor='middle'%3EYour photo preview%3C/text%3E%3C/svg%3E" class="w-full h-full object-cover transition-all duration-200">
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold selected" data-filter="none">
+                Normal
+              </button>
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold" data-filter="contrast(1.2) saturate(1.35)">
+                Clarendon
+              </button>
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold" data-filter="sepia(0.25) contrast(1.15) brightness(1.1)">
+                Valencia
+              </button>
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold" data-filter="hue-rotate(-15deg) saturate(1.4)">
+                Juno
+              </button>
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold" data-filter="brightness(1.15) saturate(1.2)">
+                Lark
+              </button>
+              <button type="button" class="filter-choice-btn p-2 rounded-xl border border-white/10 bg-white/5 text-white font-semibold" data-filter="grayscale(1) contrast(1.3)">
+                Moon (B&W)
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Location & Geotagging -->
+          <div class="wizard-step hidden" id="step3">
+            <h3 class="text-xs uppercase tracking-wider text-[#d2a35c] font-bold mb-3">Spot Location & Verification</h3>
+            
+            <div class="mb-3">
+              <label class="block text-xs font-semibold mb-1 text-white/90">Location Name *</label>
               <div class="flex gap-2">
-                <input type="text" id="postLocation" required placeholder="e.g. Ubud, Bali" class="glass-input flex-1 p-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]">
-                <button type="button" id="getLocationBtn" class="bg-[#fdf1e1]/10 hover:bg-[#fdf1e1]/20 border border-[#fdf1e1]/20 px-4 rounded-xl text-xl flex items-center justify-center transition-colors" title="Use Current Location">📍</button>
+                <input type="text" id="postLocation" placeholder="e.g. Hidden Canyon, Ubud, Bali" class="glass-input flex-1 p-2.5 text-xs">
+                <button type="button" id="getLocationBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 px-3 rounded-xl text-xs font-bold text-white" title="Use GPS Coordinates">⌖ GPS</button>
+              </div>
+              <p id="locationErrorMsg" class="text-xs text-red-400 hidden mt-1">Please enter a spot location.</p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#d2a35c]/10 border border-[#d2a35c]/20 text-xs space-y-1">
+              <div class="font-bold text-[#e6c78e]">Useful details for the next traveler</div>
+              <p class="text-[11px] text-white/80">Add stay, transport, food or route notes when they make this place easier to visit.</p>
+            </div>
+          </div>
+
+          <!-- Step 4: The Spot Guide (Hotel, Transport, Food, Route) -->
+          <div class="wizard-step hidden" id="step4">
+            <h3 class="text-xs uppercase tracking-wider text-[#d2a35c] font-bold mb-3">Spot Intelligence Guide (Optional)</h3>
+            
+            <div class="space-y-3">
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2">
+                <span class="text-xs font-bold text-[#d2a35c] block">⌂ Hotel / Stay Recommendation</span>
+                <input type="text" id="postHotelName" placeholder="Hotel Name" class="glass-input w-full p-2 text-xs">
+                <input type="text" id="postHotelContact" placeholder="Contact or Booking Link" class="glass-input w-full p-2 text-xs">
+                <textarea id="postHotelFeedback" placeholder="Honest feedback on cleanliness, view, price..." class="glass-input w-full p-2 text-xs" rows="2"></textarea>
+              </div>
+
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2">
+                <span class="text-xs font-bold text-[#d2a35c] block">⇄ Transport & Route</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="text" id="postTransportType" placeholder="Type (Scooter, Cab, Bus)" class="glass-input p-2 text-xs">
+                  <input type="text" id="postTransportPrice" placeholder="Fare / Price" class="glass-input p-2 text-xs">
+                </div>
+                <input type="text" id="postTransportContact" placeholder="Contact number / station" class="glass-input w-full p-2 text-xs">
+                <textarea id="postRouteDesc" placeholder="Directions & Route tips..." class="glass-input w-full p-2 text-xs" rows="2"></textarea>
+              </div>
+
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2">
+                <span class="text-xs font-bold text-[#d2a35c] block">⋈ Food & Must Visit</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="text" id="postFoodPlace" placeholder="Restaurant Name" class="glass-input p-2 text-xs">
+                  <input type="text" id="postFoodPrice" placeholder="Avg Price for Two" class="glass-input p-2 text-xs">
+                </div>
+                <input type="text" id="postMustVisitName" placeholder="Key nearby spots to see" class="glass-input w-full p-2 text-xs">
               </div>
             </div>
-            
-            <div class="mb-2">
-              <label class="block text-sm font-medium mb-2 text-[#fdf1e1]/80">Description</label>
-              <textarea id="postDescription" placeholder="Tell us about the spot..." class="glass-input w-full p-3 rounded-xl min-h-[100px] resize-y focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]"></textarea>
-            </div>
           </div>
 
-          <!-- Step 2: Hotel & Transport -->
-          <div class="wizard-step hidden" id="step2">
-            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Hotel & Residency</h3>
-            <div class="space-y-4 mb-6">
-              <input type="text" id="postHotelName" placeholder="Hotel Name (Optional)" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postHotelContact" placeholder="Contact / Booking Link" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <textarea id="postHotelFeedback" placeholder="Your feedback on the stay..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
-            </div>
-
-            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Transport</h3>
-            <div class="space-y-4">
-              <input type="text" id="postTransportType" placeholder="Type (e.g. Bus, Train, Flight)" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postTransportPrice" placeholder="Price" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postTransportContact" placeholder="Contact / Where to find" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-            </div>
-          </div>
-
-          <!-- Step 3: Route & Food -->
-          <div class="wizard-step hidden" id="step3">
-            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Route</h3>
-            <div class="space-y-4 mb-6">
-              <textarea id="postRouteDesc" placeholder="Describe the route you traveled..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
-              <input type="text" id="postRouteCost" placeholder="Total Travel Cost" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-            </div>
-
-            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Food & Restaurant</h3>
-            <div class="space-y-4">
-              <input type="text" id="postFoodPlace" placeholder="Restaurant Name" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postFoodPrice" placeholder="Price" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postFoodLocation" placeholder="Location" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <textarea id="postFoodFeedback" placeholder="Feedback on food..." class="glass-input w-full p-3 rounded-xl resize-y focus:outline-none"></textarea>
-            </div>
-          </div>
-
-          <!-- Step 4: Must Visit & Review -->
-          <div class="wizard-step hidden" id="step4">
-            <h3 class="text-[#7fb4d4] font-medium mb-4 text-lg border-b border-[#fdf1e1]/10 pb-2">Must Visit Nearby</h3>
-            <div class="space-y-4 mb-8">
-              <input type="text" id="postMustVisitName" placeholder="Place Name & Address" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-              <input type="text" id="postMustVisitTransport" placeholder="Way of Transport" class="glass-input w-full p-3 rounded-xl focus:outline-none">
-            </div>
-            
-            <div class="bg-[#fdf1e1]/5 p-6 rounded-2xl border border-[#fdf1e1]/10 text-center">
-              <div class="text-4xl mb-3">✨</div>
-              <h4 class="text-lg font-medium text-white mb-2">Ready to publish!</h4>
-              <p class="text-sm text-[#fdf1e1]/70">Your spot is about to go live for everyone to see.</p>
-            </div>
-          </div>
         </div>
 
-        <div class="p-5 border-t border-[#fdf1e1]/10 flex justify-between bg-black/20">
-          <button type="button" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-[#fdf1e1]/10 hover:bg-[#fdf1e1]/20 transition-colors invisible" id="wizardPrevBtn">Back</button>
-          <button type="button" class="px-6 py-2.5 rounded-xl text-sm font-medium bg-[#fdf1e1] text-[#111411] hover:bg-white transition-colors shadow-lg shadow-white/10" id="wizardNextBtn">Next Step</button>
-          <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-medium bg-[#7fb4d4] text-[#111411] hover:bg-[#a5d3f0] transition-colors shadow-lg shadow-[#7fb4d4]/20 hidden" id="wizardSubmitBtn">Publish Spot</button>
+        <!-- Wizard Footer -->
+        <div class="p-4 border-t border-white/10 flex justify-between bg-black/40">
+          <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition-colors invisible" id="wizardPrevBtn">Back</button>
+          <button type="button" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#d2a35c] text-[#070c0a] hover:bg-[#e6c78e] transition-colors" id="wizardNextBtn">Next Step →</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#d2a35c] text-[#070c0a] hover:bg-[#e6c78e] transition-colors hidden shadow-lg shadow-[#d2a35c]/25" id="wizardSubmitBtn">Share Spot</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Chat Sidebar -->
-  <div id="chatSidebar" class="fixed right-[-350px] top-0 w-[350px] h-full z-[150] glass-modal border-l border-[#fdf1e1]/10 transition-all duration-300 ease-out flex flex-col shadow-2xl">
-    <div class="p-5 border-b border-[#fdf1e1]/10 flex justify-between items-center bg-black/10">
-      <h3 class="font-medium tracking-wide">Messages</h3>
-      <button id="closeChatBtn" class="text-2xl text-[#fdf1e1]/60 hover:text-white leading-none">&times;</button>
-    </div>
-    <div class="flex-1 p-5 overflow-y-auto custom-scrollbar flex flex-col gap-4" id="chatList">
-      <div class="bg-[#fdf1e1]/5 border border-[#fdf1e1]/10 p-3 rounded-2xl rounded-tl-sm w-4/5">
-        <strong class="block text-sm text-[#7fb4d4] mb-1">Jane Traveler</strong>
-        <p class="text-sm">Hey, loved your post on Bali!</p>
+  <!-- Traveler messages -->
+  <div id="chatSidebar" class="fixed right-[-380px] top-0 w-[360px] h-full z-[160] glass-panel border-l border-white/10 transition-all duration-300 ease-out flex flex-col shadow-2xl bg-[#091210]">
+    <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">✉</span>
+        <h3 class="font-bold text-sm tracking-wide text-white">Direct Messages</h3>
       </div>
+      <button id="closeChatBtn" class="text-2xl text-white/60 hover:text-white leading-none">&times;</button>
     </div>
-    <div class="p-4 border-t border-[#fdf1e1]/10 bg-black/20 flex gap-2">
-      <input type="text" placeholder="Message Jane..." class="glass-input flex-1 p-3 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#7fb4d4]">
-      <button class="bg-[#7fb4d4] text-[#111411] rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#a5d3f0] transition-colors">➤</button>
+
+    <!-- Active Conversations List (populated from real travelers) -->
+    <div class="p-3 border-b border-white/10 flex flex-col gap-1 overflow-y-auto custom-scrollbar dm-thread-list" id="chatThreadList">
+      <p class="text-[11px] text-white/50 py-2 px-1">No conversations yet.</p>
+    </div>
+
+    <!-- Message Bubble Area -->
+    <div id="chatAuthorHeader" class="px-4 pt-3 text-xs font-bold text-[#d2a35c]"></div>
+    <div class="flex-1 p-4 overflow-y-auto custom-scrollbar flex flex-col gap-3" id="chatList">
+      <p id="chatEmptyState" class="text-xs text-white/50 text-center py-6">No messages yet. Messages you send are delivered to the other traveler on this platform.</p>
+    </div>
+
+    <!-- Message Input -->
+    <form id="dmSendForm" class="p-3 border-t border-white/10 bg-black/40 flex gap-2">
+      <input type="text" id="dmInputField" placeholder="Message..." class="glass-input flex-1 p-2.5 text-xs">
+      <button type="submit" class="bg-[#d2a35c] text-[#070c0a] rounded-full w-9 h-9 flex items-center justify-center hover:bg-[#e6c78e] transition-colors font-bold text-xs">→</button>
+    </form>
+  </div>
+
+  <!-- 9. AI CONTENT INTEGRITY INSPECTION MODAL -->
+  <div id="aiTrustModal" class="fixed inset-0 z-[250] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl shadow-2xl border border-[#d2a35c]/40 bg-[#0c1613] space-y-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">⛨</span>
+          <h3 class="font-ogg text-xl text-[#d2a35c]">AI Trust & Integrity Audit</h3>
+        </div>
+        <button id="closeAiTrustModalBtn" class="text-2xl text-white/60 hover:text-white leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-3 text-xs" id="aiTrustModalContent">
+        <!-- Injected via JS -->
+      </div>
+
+      <button id="closeTrustDetailsBtn" class="w-full bg-white/10 hover:bg-white/20 text-white py-2.5 rounded-xl font-bold text-xs transition-colors">Close Audit Report</button>
+    </div>
+  </div>
+
+  <!-- Post actions -->
+  <div id="postActionSheet" class="action-sheet-overlay hidden">
+    <div class="action-sheet-card">
+      <button class="action-sheet-item text-[#d2a35c]" id="sheetShareBtn">⧉ Copy Spot Link</button>
+      <button class="action-sheet-item text-white" id="sheetSaveBtn">◇ Bookmark Spot</button>
+      <button class="action-sheet-item text-white" id="sheetAuditBtn">⛨ View AI Trust Audit</button>
+      <button class="action-sheet-item text-white" id="sheetHideBtn">◌ Not Interested</button>
+      <button class="action-sheet-item danger" id="sheetReportBtn">⚑ Report Suspicious Review</button>
+      <button class="action-sheet-item danger hidden" id="sheetDeleteBtn">⌫ Delete Spot</button>
+      <button class="action-sheet-item text-white/70" id="sheetCancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- 11. QUICK STORY POST MODAL -->
+  <div id="storyCreateModal" class="fixed inset-0 z-[220] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl border border-white/20 bg-[#0c1613] space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-base text-white">Share a field update</h3>
+        <button id="closeStoryCreateModal" class="text-2xl text-white/60 hover:text-white">&times;</button>
+      </div>
+      
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Spot Name / Location</label>
+          <input type="text" id="newStorySpot" placeholder="e.g. Sunset Point, Gokarna" class="glass-input w-full p-2.5 text-xs">
+        </div>
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Upload a field photo</label>
+          <div class="glass-input flex flex-col items-center justify-center w-full h-28 rounded-2xl border-dashed border-2 border-white/25 hover:border-[#d2a35c] cursor-pointer relative overflow-hidden group">
+            <input type="file" id="newStoryMediaFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="Choose a field photo">
+            <div class="flex flex-col items-center justify-center p-3 text-center z-0" id="storyUploadPlaceholder">
+              <span class="text-2xl mb-1">◉</span>
+              <p class="text-xs font-bold text-white">Choose a photo</p>
+              <p class="text-[10px] text-white/60">JPG, PNG or WebP</p>
+            </div>
+            <img id="storyMediaPreview" class="hidden absolute inset-0 w-full h-full object-cover z-0">
+          </div>
+        </div>
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Or Paste Image URL</label>
+          <input type="url" id="newStoryMedia" placeholder="Paste an image URL" class="glass-input w-full p-2 text-xs">
+        </div>
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Quick Caption</label>
+          <input type="text" id="newStoryCaption" placeholder="Incredible sunset after a 20 min hike!" class="glass-input w-full p-2.5 text-xs">
+        </div>
+      </div>
+
+      <button id="submitNewStoryBtn" class="w-full bg-[#d2a35c] text-[#070c0a] font-bold py-2.5 rounded-xl hover:bg-[#e6c78e] transition-colors text-xs">Share update</button>
+    </div>
+  </div>
+
+  <!-- 12. TRUST POLICY MODAL -->
+  <div id="trustPolicyModal" class="fixed inset-0 z-[220] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl border border-[#d2a35c]/40 bg-[#0c1613] space-y-4 text-xs">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">⛨</span>
+          <h3 class="font-ogg text-xl text-[#d2a35c]">How trust labels work</h3>
+        </div>
+        <button id="closeTrustPolicyModal" class="text-2xl text-white/60 hover:text-white">&times;</button>
+      </div>
+      
+      <div class="space-y-3 text-white/85 leading-relaxed">
+        <div class="p-3 bg-white/5 rounded-xl border border-white/10">
+          <strong class="text-white block mb-1">1. Creator profile badges</strong>
+          A badge reflects the status stored on a creator profile. Review the person's notes and links before making travel decisions.
+        </div>
+        <div class="p-3 bg-white/5 rounded-xl border border-white/10">
+          <strong class="text-white block mb-1">2. Content signals</strong>
+          Automated checks look for unusual editing patterns and repeated promotional language. They can make mistakes and do not prove where a photo was taken.
+        </div>
+        <div class="p-3 bg-white/5 rounded-xl border border-white/10">
+          <strong class="text-white block mb-1">3. Recommendations</strong>
+          Popularity reflects activity on the platform. It is not an endorsement or a guarantee of quality.
+        </div>
+      </div>
+
+      <button id="acknowledgeTrustBtn" class="w-full bg-[#d2a35c] text-[#070c0a] font-bold py-2.5 rounded-xl hover:bg-[#e6c78e] transition-colors text-xs">Understood</button>
     </div>
   </div>
 
   <script src="sosEngine.js"></script>
   <script src="feed.js"></script>
+
+  <!-- Search and explore drawer used by the bottom navigation -->
+  <div class="notifications-flyout-drawer search-flyout-drawer" id="searchDrawer" aria-label="Search and explore">
+    <div class="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
+      <h3 class="font-ogg text-xl text-white">Search and explore</h3>
+      <button class="text-2xl text-white/60 hover:text-white leading-none" id="closeSearchDrawer" type="button" aria-label="Close search">&times;</button>
+    </div>
+    <label class="sr-only" for="searchInput">Search travelers and spots</label>
+    <input id="searchInput" type="search" class="glass-input w-full p-3 rounded-xl text-sm mb-5" placeholder="Search travelers or places">
+    <div class="flex-1 overflow-y-auto custom-scrollbar space-y-5">
+      <section>
+        <h4 class="text-[10px] uppercase tracking-[0.16em] text-white/45 mb-2">Travelers</h4>
+        <div id="searchPeopleList" class="space-y-1"><p class="text-[11px] text-white/45 py-1">Type a name to find travelers.</p></div>
+      </section>
+      <section>
+        <h4 class="text-[10px] uppercase tracking-[0.16em] text-white/45 mb-2">Spots and places</h4>
+        <div id="searchPlacesList" class="space-y-1"><p class="text-[11px] text-white/45 py-1">Type a place to find spots.</p></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="notifications-flyout-drawer" id="notificationsDrawer">
+    <div class="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">◎</span>
+        <h3 class="font-ogg text-xl text-white">Notifications</h3>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="text-[11px] font-semibold text-[#d2a35c] hover:underline" id="markAllReadBtn">Mark all read</button>
+        <button class="text-2xl text-white/60 hover:text-white leading-none" id="closeNotificationsDrawer">&times;</button>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto custom-scrollbar space-y-3" id="notificationsList">
+      <p class="text-xs text-white/50 text-center py-6" id="notificationsEmpty">No activity yet. Likes, comments, follows and messages on your spots will appear here.</p>
+    </div>
+  </div>
+
+  <!-- 14. FIELD GUIDE USER & CREATOR PROFILE MODAL -->
+  <div id="creatorProfileModal" class="fixed inset-0 z-[280] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-xl rounded-3xl overflow-hidden border border-white/20 bg-[#0c1613] flex flex-col max-h-[90vh]">
+      <!-- Profile Header -->
+      <div class="p-6 border-b border-white/10 relative bg-gradient-to-b from-white/5 to-transparent">
+        <button id="closeProfileModalBtn" class="absolute top-4 right-4 text-2xl text-white/60 hover:text-white leading-none">&times;</button>
+        
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-tr from-amber-500 via-rose-500 to-fuchsia-600 flex-shrink-0">
+            <img id="modalProfileAvatar" src="" class="w-full h-full rounded-full object-cover border-2 border-[#0c1613]" alt="Avatar">
+          </div>
+          
+          <div class="flex-1 text-center sm:text-left space-y-2">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h2 id="modalProfileUsername" class="font-bold text-lg text-white">Traveler</h2>
+              <span id="modalProfileBadge" class="post-verified-badge hidden">✓ Pro</span>
+              <button id="modalProfileFollowBtn" class="follow-pill-btn ml-2">Follow</button>
+              <button id="modalProfileMessageBtn" class="px-3.5 py-1 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition-colors">✉ Message</button>
+              <button id="modalProfileEditBtn" class="hidden px-3.5 py-1 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition-colors">✏ Edit Profile</button>
+              <a href="auth.html✓verify_pro=true" id="modalProfileUpgradeBtn" class="hidden px-3.5 py-1 rounded-full text-xs font-bold bg-[#d2a35c]/20 border border-[#d2a35c]/40 text-[#d2a35c] hover:bg-[#d2a35c] hover:text-[#070c0a] transition-all">✓ Verify Pro</a>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="flex items-center justify-center sm:justify-start gap-6 text-xs text-white/80 py-1">
+              <div><strong id="modalProfilePostsCount" class="text-white font-bold">0</strong> posts</div>
+              <div><strong id="modalProfileFollowersCount" class="text-white font-bold">0</strong> followers</div>
+              <div><strong id="modalProfileFollowingCount" class="text-white font-bold">0</strong> following</div>
+            </div>
+
+            <!-- Bio & Vibes -->
+            <div>
+              <div id="modalProfileName" class="font-bold text-xs text-white"></div>
+              <p id="modalProfileBio" class="text-xs text-white/75 mt-0.5 leading-relaxed"></p>
+              <div id="modalProfileVibes" class="flex flex-wrap gap-1.5 mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Grid Tabs -->
+      <div class="flex border-b border-white/10 text-xs font-bold text-white/60">
+        <button class="flex-1 py-3 text-center text-[#d2a35c] border-b-2 border-[#d2a35c] flex items-center justify-center gap-1.5" id="profileTabPosts">
+          <span>◉</span> POSTS
+        </button>
+        <button class="flex-1 py-3 text-center hover:text-white flex items-center justify-center gap-1.5" id="profileTabSaved">
+          <span>◇</span> SAVED SPOTS
+        </button>
+      </div>
+
+      <!-- Traveler posts -->
+      <div class="p-4 overflow-y-auto flex-1 custom-scrollbar">
+        <div class="explore-grid-container" id="profilePostsGrid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share field note -->
+  <div id="sharePostModal" class="fixed inset-0 z-[270] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-sm p-5 rounded-3xl border border-white/20 bg-[#0c1613] space-y-4">
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
+        <h3 class="font-bold text-sm text-white">Share Spot</h3>
+        <button id="closeShareModalBtn" class="text-2xl text-white/60 hover:text-white leading-none">&times;</button>
+      </div>
+
+      <!-- Direct Message Quick Contacts -->
+      <div class="space-y-2">
+        <div class="text-[11px] font-bold text-white/60 uppercase tracking-wider">Send in Direct Message</div>
+        <div class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar" id="shareContactsList">
+          <p class="text-[11px] text-white/50 py-3 text-center">No other travelers yet.</p>
+        </div>
+      </div>
+
+      <!-- Social & Copy Actions -->
+      <div class="border-t border-white/10 pt-3 space-y-2">
+        <button id="shareActionCopyLink" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-white transition-colors">
+          <span>&#x29C9; Copy Spot Link</span>
+          <span class="text-[#d2a35c]">Copy</span>
+        </button>
+        <button id="shareActionWhatsApp" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-semibold text-emerald-300 border border-emerald-500/20 transition-colors">
+          <span>&#x2197; Share to WhatsApp</span>
+          <span>↗</span>
+        </button>
+        <button id="shareActionNative" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-white transition-colors">
+          <span>&#x25CE; More Share Options</span>
+          <span>↗</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full field note and discussion -->
+  <div id="commentsModal" class="fixed inset-0 z-[260] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-3xl rounded-3xl overflow-hidden border border-white/20 bg-[#0c1613] flex flex-col md:flex-row max-h-[85vh]">
+      <!-- Left Column: Post Media Preview -->
+      <div class="md:w-1/2 bg-black flex items-center justify-center overflow-hidden relative min-h-[260px] md:min-h-[460px]">
+        <img id="commentsModalMediaImg" src="" class="w-full h-full object-cover" alt="Post photo">
+      </div>
+
+      <!-- Right Column: Author, Comments Thread & Add Comment -->
+      <div class="md:w-1/2 flex flex-col border-t md:border-t-0 md:border-l border-white/10 bg-[#091210]">
+        <!-- Header -->
+        <div class="p-3.5 border-b border-white/10 flex justify-between items-center">
+          <div class="flex items-center gap-2.5">
+            <img id="commentsModalAuthorAvatar" src="" class="w-8 h-8 rounded-full object-cover border border-[#d2a35c]" alt="Author">
+            <div>
+              <span id="commentsModalAuthorUsername" class="text-xs font-bold text-white block">username</span>
+              <span id="commentsModalLocation" class="text-[10px] text-white/50 block">⌖ Location</span>
+            </div>
+          </div>
+          <button id="closeCommentsModalBtn" class="text-2xl text-white/60 hover:text-white leading-none">&times;</button>
+        </div>
+
+        <!-- Comments List -->
+        <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-3.5 text-xs" id="commentsModalList">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Sticky Bottom Comment Input -->
+        <form id="commentsModalForm" class="p-3 border-t border-white/10 bg-black/30 flex flex-col gap-2">
+          <div class="flex gap-2">
+            <button type="button" class="text-base hover:scale-125 transition-transform comments-modal-symbol" data-symbol="♥">♥</button>
+            <button type="button" class="text-base hover:scale-125 transition-transform comments-modal-symbol" data-symbol="✦">✦</button>
+            <button type="button" class="text-base hover:scale-125 transition-transform comments-modal-symbol" data-symbol="✧">✧</button>
+            <button type="button" class="text-base hover:scale-125 transition-transform comments-modal-symbol" data-symbol="⌖">⌖</button>
+            <button type="button" class="text-base hover:scale-125 transition-transform comments-modal-symbol" data-symbol="☆">☆</button>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="commentsModalInput" placeholder="Add a comment..." class="glass-input flex-1 p-2 text-xs">
+            <button type="submit" class="px-3.5 py-1.5 rounded-xl bg-[#d2a35c] text-[#070c0a] font-bold text-xs hover:bg-[#e6c78e] transition-colors">Post</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17. EDIT PROFILE MODAL -->
+  <div id="editProfileModal" class="fixed inset-0 z-[290] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl border border-white/20 bg-[#0c1613] space-y-4">
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
+        <h3 class="font-bold text-sm text-white">Edit Your Profile</h3>
+        <button id="closeEditProfileBtn" class="text-2xl text-white/60 hover:text-white leading-none">&times;</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Display Name</label>
+          <input type="text" id="editNameInput" class="glass-input w-full p-2.5 text-xs">
+        </div>
+
+        <div>
+          <label class="block text-white/80 font-semibold mb-1">Bio / Travel Motto</label>
+          <textarea id="editBioInput" rows="2" class="glass-input w-full p-2.5 text-xs"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-white/80 font-semibold mb-2">Profile photo</label>
+          <div class="flex items-center gap-3">
+            <img id="editAvatarPreview" src="" alt="Profile photo preview" class="w-14 h-14 rounded-full object-cover border border-white/20 bg-white/5">
+            <div class="min-w-0 flex-1">
+              <label for="editAvatarFileInput" class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white hover:bg-white/10">Choose photo</label>
+              <input type="file" id="editAvatarFileInput" accept="image/jpeg,image/png,image/webp" class="sr-only">
+              <p id="editAvatarHelp" class="mt-1.5 text-[10px] leading-relaxed text-white/50">Select a JPG, PNG or WebP image. It will be resized for your profile.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="saveProfileBtn" class="w-full bg-[#d2a35c] text-[#070c0a] font-bold py-2.5 rounded-xl hover:bg-[#e6c78e] transition-colors text-xs">Save Changes</button>
+    </div>
+  </div>
+
+
+  <!-- Login prompt for account actions -->
+  <div id="authPromptModal" class="fixed inset-0 z-[300] hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+    <div class="glass-panel w-full max-w-sm p-6 rounded-3xl border border-[#d2a35c]/40 bg-[#0c1613] space-y-4 text-center">
+      <div class="text-4xl">◈</div>
+      <h3 class="font-ogg text-lg text-white">Log in to continue</h3>
+      <p class="text-xs text-white/70 leading-relaxed" id="authPromptMessage">
+        You need an account to do that. Signing in is free and takes a few seconds.
+      </p>
+      <div class="flex gap-2 pt-1">
+        <button id="authPromptDismissBtn" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-colors">Not now</button>
+        <a href="auth.html?mode=login" id="authPromptLoginBtn" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-[#d2a35c] text-[#070c0a] hover:bg-[#e6c78e] transition-colors text-center">Log in</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

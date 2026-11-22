@@ -1,23 +1,30 @@
-const fs = require('fs');
-const path = require('path');
-
 /**
- * AI Content Integrity & Anti-Fake Promotion Engine
- * Analyzes uploaded photos/videos for AI alteration & deepfakes,
- * and analyzes user post patterns for fake promotion / review bias.
+ * AI Content Integrity & Anti-Promotion Engine
+ *
+ * Scope of what this engine can actually verify:
+ *  1. Media metadata signatures written by known generative tools / C2PA manifests.
+ *  2. Review-text patterns that indicate repetitive or extreme promotional language.
+ *
+ * It does NOT run a deepfake or forgery model. Any result is therefore reported
+ * as "no marker detected" rather than "verified authentic".
  */
 
 function detectAIAlteration(mediaStr) {
   if (!mediaStr || typeof mediaStr !== 'string') {
-    return { isAltered: false, confidence: 98, note: "Standard media encoding verified" };
+    return {
+      isAltered: false,
+      signatureFound: false,
+      confidence: null,
+      note: 'No media metadata was available to scan.'
+    };
   }
 
   const str = mediaStr.toLowerCase();
 
-  // Synthetic signature heuristics (base64 metadata / prompt signatures / low entropy)
-  const isSyntheticArtifact = str.includes('c2pa') || 
-                              str.includes('stable-diffusion') || 
-                              str.includes('midjourney') || 
+  // Real, checkable signatures embedded by generative tools and C2PA manifests.
+  const isSyntheticArtifact = str.includes('c2pa') ||
+                              str.includes('stable-diffusion') ||
+                              str.includes('midjourney') ||
                               str.includes('dall-e') ||
                               str.includes('generativeai') ||
                               (str.length > 50000 && str.includes('software') && str.includes('adobe photoshop cc 2026'));
@@ -25,25 +32,17 @@ function detectAIAlteration(mediaStr) {
   if (isSyntheticArtifact) {
     return {
       isAltered: true,
+      signatureFound: true,
       confidence: 94,
-      note: "AI digital manipulation or synthetic image generation detected"
-    };
-  }
-
-  // Simulated heuristic check based on image structure length
-  const fakeCheckSeed = mediaStr.length % 97;
-  if (fakeCheckSeed === 42) {
-    return {
-      isAltered: true,
-      confidence: 88,
-      note: "High frequency pixel distortion indicating digital alteration"
+      note: 'A generative-tool or C2PA content signature was found in the media metadata.'
     };
   }
 
   return {
     isAltered: false,
-    confidence: 97,
-    note: "Authentic camera sensor capture verified"
+    signatureFound: false,
+    confidence: null,
+    note: 'No generative-tool signature found in the media metadata. This is a metadata check only and cannot confirm the media is unaltered.'
   };
 }
 
@@ -80,13 +79,15 @@ function analyzePromotionBias(postData, userHistory) {
     return {
       status: "Suspicious Review Pattern ⚠️",
       scoreDeduction: 25,
-      reason: repetitiveTargetCount >= 2 
-        ? "Repetitive promotional posts targeting the same business entity" 
+      reason: repetitiveTargetCount >= 2
+        ? "Repetitive promotional posts targeting the same business entity"
         : "Extreme sentiment bias detected in review text"
     };
   }
 
-  if (description.includes('sponsored') || description.includes('paid partnership') || description.includes('ad')) {
+  // Whole-word match only, so ordinary words like "adventure" are not flagged.
+  const sponsoredPattern = /\b(sponsored|paid partnership|advertisement|advertising|collab(oration)?|promoted post)\b/;
+  if (sponsoredPattern.test(description)) {
     return {
       status: "Sponsored / Commercial Post 📢",
       scoreDeduction: 5,
@@ -95,9 +96,9 @@ function analyzePromotionBias(postData, userHistory) {
   }
 
   return {
-    status: "Organic Traveler Experience 🌿",
+    status: "No Promotion Pattern Detected 🌿",
     scoreDeduction: 0,
-    reason: "Balanced organic feedback pattern"
+    reason: "No repetitive or extreme promotional pattern found in this post"
   };
 }
 
@@ -105,11 +106,9 @@ function analyzePostIntegrity(postData, userHistory, authorInfo) {
   const alterationCheck = detectAIAlteration(postData.media);
   const biasCheck = analyzePromotionBias(postData, userHistory);
 
-  let trustScore = 98;
-
-  if (alterationCheck.isAltered) {
-    trustScore -= 35;
-  }
+  // The score reflects only the two checks actually performed above:
+  // a metadata signature scan and a review-pattern analysis.
+  let trustScore = alterationCheck.signatureFound ? 50 : 70;
   trustScore -= biasCheck.scoreDeduction;
 
   // Boost for Aadhaar-verified Pro Creators
@@ -120,13 +119,13 @@ function analyzePostIntegrity(postData, userHistory, authorInfo) {
 
   trustScore = Math.max(25, Math.min(99, trustScore));
 
-  let badge = "AI Verified Authentic 🛡️";
+  let badge = "No Synthetic Markers Detected 🛡️";
   let badgeColor = "emerald";
 
-  if (alterationCheck.isAltered) {
-    badge = "AI Alteration Flagged 🚨";
+  if (alterationCheck.signatureFound) {
+    badge = "Synthetic Media Signature Flagged 🚨";
     badgeColor = "red";
-  } else if (trustScore < 75) {
+  } else if (trustScore < 60) {
     badge = "Suspicious Review Pattern ⚠️";
     badgeColor = "amber";
   }
@@ -134,6 +133,7 @@ function analyzePostIntegrity(postData, userHistory, authorInfo) {
   return {
     trustScore,
     isAiAltered: alterationCheck.isAltered,
+    signatureFound: alterationCheck.signatureFound,
     alterationNote: alterationCheck.note,
     promotionStatus: biasCheck.status,
     promotionReason: biasCheck.reason,
