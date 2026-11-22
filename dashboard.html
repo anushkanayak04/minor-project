@@ -59,10 +59,10 @@
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 mb-3">
-            <span>📡 Real-Time AI Heatmap & Hazard Intelligence</span>
+            <span>📡 Community Heatmap & Hazard Intelligence</span>
           </div>
           <h1 class="font-ogg text-3xl md:text-4xl text-[#7fb4d4]" id="dashboardPlaceTitle">Location Safety & Traffic Analytics</h1>
-          <p class="text-sm text-[#fdf1e1]/75 mt-1">Aggregating user post timestamps, roadwork, weather warnings, and government advisories.</p>
+          <p class="text-sm text-[#fdf1e1]/75 mt-1">Aggregating traveler posts, transport notes and safety flags uploaded to this platform.</p>
         </div>
 
         <!-- Search Input -->
@@ -82,7 +82,7 @@
       <div class="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-white/10" id="dashQuickTags">
         <span class="text-xs text-[#fdf1e1]/60 mr-1">Quick Select:</span>
         <button class="dash-tag-btn px-3 py-1 rounded-full text-xs font-medium bg-white/5 hover:bg-[#7fb4d4]/20 border border-white/15" data-place="Jaipur, Rajasthan">Jaipur</button>
-        <button class="dash-tag-btn px-3 py-1 rounded-full text-xs font-medium bg-white/5 hover:bg-[#7fb4d4]/20 border border-white/15" data-place="Indore, Madhya Pradesh">Indore (☑️ Community)</button>
+        <button class="dash-tag-btn px-3 py-1 rounded-full text-xs font-medium bg-white/5 hover:bg-[#7fb4d4]/20 border border-white/15" data-place="Indore, Madhya Pradesh">Indore</button>
         <button class="dash-tag-btn px-3 py-1 rounded-full text-xs font-medium bg-white/5 hover:bg-[#7fb4d4]/20 border border-white/15" data-place="Manali, Himachal Pradesh">Manali</button>
         <button class="dash-tag-btn px-3 py-1 rounded-full text-xs font-medium bg-white/5 hover:bg-[#7fb4d4]/20 border border-white/15" data-place="Goa">Goa</button>
       </div>
@@ -92,26 +92,26 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <div class="glass-card p-5 rounded-2xl border-l-4 border-emerald-400">
         <div class="text-xs uppercase tracking-wider text-[#fdf1e1]/60 font-semibold mb-1">Safety Index Rating</div>
-        <div class="text-3xl font-bold text-emerald-400" id="valSafetyIndex">8.8 / 10</div>
-        <div class="text-xs text-[#fdf1e1]/70 mt-1.5" id="valSafetyDesc">Low crime rate & active patrols</div>
+        <div class="text-3xl font-bold text-emerald-400" id="valSafetyIndex">—</div>
+        <div class="text-xs text-[#fdf1e1]/70 mt-1.5" id="valSafetyDesc">No verified safety data source</div>
       </div>
       
       <div class="glass-card p-5 rounded-2xl border-l-4 border-[#7fb4d4]">
         <div class="text-xs uppercase tracking-wider text-[#fdf1e1]/60 font-semibold mb-1">Traffic Congestion Index</div>
-        <div class="text-lg font-bold text-[#7fb4d4] truncate" id="valTrafficIndex">Moderate Congestion</div>
-        <div class="text-xs text-[#fdf1e1]/70 mt-1.5">Peak hour delays expected</div>
+        <div class="text-lg font-bold text-[#7fb4d4] truncate" id="valTrafficIndex">—</div>
+        <div class="text-xs text-[#fdf1e1]/70 mt-1.5">No live traffic feed connected</div>
       </div>
 
       <div class="glass-card p-5 rounded-2xl border-l-4 border-amber-400">
         <div class="text-xs uppercase tracking-wider text-[#fdf1e1]/60 font-semibold mb-1">Hours to Avoid</div>
-        <div class="text-sm font-bold text-amber-300 truncate" id="valAvoidHours">05:30 PM - 08:30 PM</div>
-        <div class="text-xs text-[#fdf1e1]/70 mt-1.5">Heavy market footfall</div>
+        <div class="text-sm font-bold text-amber-300 truncate" id="valAvoidHours">—</div>
+        <div class="text-xs text-[#fdf1e1]/70 mt-1.5">No verified crowd data source</div>
       </div>
 
       <div class="glass-card p-5 rounded-2xl border-l-4 border-blue-400">
         <div class="text-xs uppercase tracking-wider text-[#fdf1e1]/60 font-semibold mb-1">Community Upload Signal</div>
-        <div class="text-2xl font-bold text-blue-300" id="valPostsCount">14 Uploads</div>
-        <div class="text-xs text-blue-400 mt-1.5">✓ Verified traveler data</div>
+        <div class="text-2xl font-bold text-blue-300" id="valPostsCount">0 Uploads</div>
+        <div class="text-xs text-blue-400 mt-1.5">Traveler posts from this platform</div>
       </div>
     </div>
 
@@ -129,10 +129,7 @@
 
             <!-- Heatmap Layer Selector Buttons -->
             <div class="flex flex-wrap gap-1.5" id="heatmapLayerTabs">
-              <button class="layer-tab px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 transition-all tab-active" data-layer="traffic">🚗 Traffic</button>
-              <button class="layer-tab px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 transition-all" data-layer="safety">🚨 Safety</button>
-              <button class="layer-tab px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 transition-all" data-layer="weather">🌧️ Weather</button>
-              <button class="layer-tab px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 transition-all" data-layer="construction">🚧 Construction</button>
+              <button class="layer-tab px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 hover:bg-white/10 transition-all tab-active" data-layer="community">📍 Community Uploads</button>
             </div>
           </div>
 
@@ -173,9 +170,9 @@
         <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
           <div>
             <h3 class="font-ogg text-xl text-[#7fb4d4] flex items-center gap-2">
-              <span>🔔</span> Real-Time Advisories
+              <span>☑️</span> Community Advisories
             </h3>
-            <p class="text-[11px] text-[#fdf1e1]/60">Categorized live safety & road alerts</p>
+            <p class="text-[11px] text-[#fdf1e1]/60">Safety & transport alerts reported by travelers</p>
           </div>
         </div>
 
@@ -183,9 +180,7 @@
         <div class="flex gap-1.5 mb-4 flex-wrap" id="notifFilterPills">
           <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/10 text-white font-bold" data-cat="all">All</button>
           <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10" data-cat="safety">🚨 Safety</button>
-          <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10" data-cat="traffic">🚗 Traffic</button>
-          <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10" data-cat="weather">🌧️ Weather</button>
-          <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10" data-cat="construction">🚧 Construction</button>
+          <button class="notif-pill px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 text-[#fdf1e1]/70 hover:bg-white/10" data-cat="traffic">🚗 Transport</button>
         </div>
 
         <!-- Notifications Scroll List -->
@@ -200,7 +195,7 @@
   <script>
     var API_BASE = window.location.origin.includes(':') ? (window.location.origin.replace(/:[0-9]+$/, ':3000') + '/api') : '/api';
     let currentAnalytics = null;
-    let activeLayer = 'traffic';
+    let activeLayer = 'community';
     let activeNotifCat = 'all';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -271,10 +266,10 @@
       document.getElementById('dashboardPlaceTitle').textContent = `${data.locationName} Safety & Hazard Analytics`;
       document.getElementById('mapTitle').textContent = `Interactive Heatmap (${data.locationName})`;
       
-      document.getElementById('valSafetyIndex').textContent = `${data.safetyIndex} / 10`;
-      document.getElementById('valTrafficIndex').textContent = data.trafficIndex || 'Moderate';
-      document.getElementById('valAvoidHours').textContent = data.avoidHours || '05:00 PM - 08:00 PM';
-      document.getElementById('valPostsCount').textContent = `${data.userPostsCount || 0} User Uploads`;
+      document.getElementById('valSafetyIndex').textContent = data.safetyIndex != null ? `${data.safetyIndex} / 10` : '—';
+      document.getElementById('valTrafficIndex').textContent = data.trafficIndex || 'No live traffic feed';
+      document.getElementById('valAvoidHours').textContent = data.avoidHours || 'No verified crowd data';
+      document.getElementById('valPostsCount').textContent = `${data.userPostsCount || 0} Uploads`;
 
       renderHeatmapOverlay();
       renderNotifications();
@@ -286,6 +281,11 @@
       if (!currentAnalytics || !currentAnalytics.heatmapPoints) return;
 
       const filteredPoints = currentAnalytics.heatmapPoints.filter(p => p.type === activeLayer || activeLayer === 'all');
+
+      if (filteredPoints.length === 0) {
+        container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center px-8 text-center"><p class="text-xs text-white/60">No community-uploaded coordinates for this layer yet. Heatmap points appear when travelers post a location with coordinates.</p></div>';
+        return;
+      }
 
       filteredPoints.forEach(pt => {
         const dot = document.createElement('div');
@@ -354,7 +354,7 @@
           <div class="flex justify-between items-center text-[10px] text-[#fdf1e1]/60 pt-1.5 border-t border-white/5">
             <span>📍 ${n.locationDetail || 'Location'}</span>
             <div class="flex items-center gap-1">
-              ${isUserPost ? '<span class="text-blue-400 font-medium">☑️ Community Upload</span>' : '<span>🌐 Govt/Web Advisory</span>'}
+              ${isUserPost ? '<span class="text-blue-400 font-medium">☑️ Community Upload</span>' : '<span class="text-blue-400 font-medium">Community Upload</span>'}
               <span>• ${n.timestamp}</span>
             </div>
           </div>

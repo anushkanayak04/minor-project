@@ -3,170 +3,344 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Authentication & Trust Verification - bro said he knows a spot</title>
+  <title>Sign Up | bro said he knows a spot</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
   <link rel="stylesheet" href="auth.css">
-  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
-  <script src="smooth-scroll.js"></script>
-  <style>
-    .pro-modal-bg {
-      background: rgba(11, 17, 16, 0.92);
-      backdrop-filter: blur(24px);
-    }
-    .scanner-line {
-      animation: scan 2s infinite ease-in-out;
-    }
-    @keyframes scan {
-      0% { top: 0%; }
-      50% { top: 90%; }
-      100% { top: 0%; }
-    }
-  </style>
 </head>
 <body>
-  <div class="auth-container">
-    <a href="index.html" class="back-link">&larr; Back to Home</a>
-    <div class="form-wrapper">
-      <!-- Sign In Form -->
-      <form id="signInForm" class="auth-form active">
-        <h2>Sign In</h2>
-        <div class="input-group">
-          <label for="signin-username">Username</label>
-          <input type="text" id="signin-username" required>
-        </div>
-        <div class="input-group">
-          <label for="signin-password">Password</label>
-          <input type="password" id="signin-password" required>
-        </div>
-        <button type="submit" class="auth-btn">Sign In</button>
-        <p class="toggle-text">Don't have an account? <span class="toggle-link" id="showSignUp">Sign Up</span></p>
-      </form>
-
-      <!-- Sign Up Form -->
-      <form id="signUpForm" class="auth-form">
-        <h2>Sign Up</h2>
-        
-        <!-- Account Type Selector -->
-        <div class="input-group">
-          <label>Account Type</label>
-          <div style="display: flex; gap: 10px; margin-top: 5px;">
-            <label style="flex: 1; padding: 10px; border: 1px solid rgba(253,241,225,0.2); border-radius: 8px; cursor: pointer; text-align: center; font-size: 12px; background: rgba(253,241,225,0.05);" id="typeNormalLabel">
-              <input type="radio" name="accountType" value="normal" checked id="typeNormal" style="margin-right: 5px;">
-              👤 Normal Member
-            </label>
-            <label style="flex: 1; padding: 10px; border: 1px solid rgba(127,180,212,0.4); border-radius: 8px; cursor: pointer; text-align: center; font-size: 12px; background: rgba(127,180,212,0.1); color: #7fb4d4;" id="typeProLabel">
-              <input type="radio" name="accountType" value="professional" id="typePro" style="margin-right: 5px;">
-              ☑️ Pro Creator
-            </label>
+  
+  <div class="auth-page-wrapper">
+    
+    <!-- Left: Instagram Phone Mockup Showcase (Desktop) -->
+    <div class="phone-mockup-wrapper">
+      <div class="phone-frame">
+        <div class="phone-island"></div>
+        <div class="phone-screen" id="phoneSlider">
+          <!-- Slide 1 -->
+          <div class="slide-item active" style="background-image: url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&q=80&w=800');">
+            <div class="slide-gradient-overlay"></div>
+            <div class="slide-caption-box">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-6 h-6 rounded-full bg-[#38bdf8] text-black text-xs font-bold flex items-center justify-center">S</span>
+                <span class="text-xs font-semibold text-white">Community Spot Signal</span>
+              </div>
+              <p class="text-[11px] text-white/90 font-medium">Hidden waterfall and bamboo canyon trail</p>
+              <div class="flex items-center justify-between text-[10px] text-[#38bdf8] mt-2 font-mono">
+                <span> Integrity scan on every upload</span>
+                <span> Live location pin</span>
+              </div>
+            </div>
           </div>
-          <p style="font-size: 10px; color: rgba(253,241,225,0.6); margin-top: 4px;" id="accountTypeHint">
-            Normal accounts can post photos. Pro Creators verify Aadhaar + Face Scan for verified creator status.
-          </p>
+
+          <!-- Slide 2 -->
+          <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&q=80&w=800');">
+            <div class="slide-gradient-overlay"></div>
+            <div class="slide-caption-box">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-6 h-6 rounded-full bg-amber-300 text-black text-xs font-bold flex items-center justify-center">H</span>
+                <span class="text-xs font-semibold text-white">Stay Signal</span>
+              </div>
+              <p class="text-[11px] text-white/90 font-medium">Heritage stay and palace trail</p>
+              <div class="flex items-center justify-between text-[10px] text-[#38bdf8] mt-2 font-mono">
+                <span> Stay details from the traveler</span>
+                <span> Access notes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="slide-item" style="background-image: url('https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&q=80&w=800');">
+            <div class="slide-gradient-overlay"></div>
+            <div class="slide-caption-box">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-6 h-6 rounded-full bg-emerald-400 text-black text-xs font-bold flex items-center justify-center">T</span>
+                <span class="text-xs font-semibold text-white">Trail Signal</span>
+              </div>
+              <p class="text-[11px] text-white/90 font-medium"> Pine forest & mountain café trail</p>
+              <div class="flex items-center justify-between text-[10px] text-[#38bdf8] mt-2 font-mono">
+                <span> Transport notes from the traveler</span>
+                <span> Access details</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Instagram Auth Column -->
+    <div class="auth-cards-column">
+      <a href="index.html" class="back-link">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Home
+      </a>
+
+      <!-- Primary Instagram Card -->
+      <div class="ig-auth-card">
+        
+        <!-- Brand Header -->
+        <div class="ig-logo-header">
+          <h1 class="ig-brand-name">bro said he knows a spot</h1>
+          <p class="ig-brand-subtitle">Sign up to discover secret spots, authentic stays, and verified routes from real travelers.</p>
         </div>
 
-        <div class="input-group">
-          <label for="signup-name">Name</label>
-          <input type="text" id="signup-name" required>
+        <!-- Tabs: Sign Up -->
+        <div class="ig-tabs-bar">
+          <button type="button" class="ig-tab active" id="tabSignUp">Sign Up</button>
         </div>
-        <div class="input-group">
-          <label for="signup-username">Username</label>
-          <input type="text" id="signup-username" required>
-        </div>
-        <div class="input-group">
-          <label for="signup-email">Gmail</label>
-          <input type="email" id="signup-email" required>
-        </div>
-        <div class="input-group">
-          <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" required>
-        </div>
-        <div class="input-group">
-          <label for="signup-confirm-password">Confirm Password</label>
-          <input type="password" id="signup-confirm-password" required>
-        </div>
-        <button type="submit" class="auth-btn">Create Account</button>
-        <p class="toggle-text">Already have an account? <span class="toggle-link" id="showSignIn">Sign In</span></p>
-      </form>
+
+        <!-- SIGN UP FORM (ACTIVE DEFAULT) -->
+        <form id="signUpForm" class="auth-form active">
+          
+          <!-- Field: Email -->
+          <div class="input-field-wrap">
+            <label for="signup-email">Email address</label>
+            <div class="ig-input-box">
+              <input type="email" id="signup-email" required placeholder="traveler@gmail.com" class="ig-input">
+            </div>
+          </div>
+
+          <!-- Field: Full Name -->
+          <div class="input-field-wrap">
+            <label for="signup-name">Full Name</label>
+            <div class="ig-input-box">
+              <input type="text" id="signup-name" required placeholder="e.g. Maya Lin" class="ig-input">
+            </div>
+          </div>
+
+          <!-- Field: Username -->
+          <div class="input-field-wrap">
+            <label for="signup-username">Username</label>
+            <div class="ig-input-box">
+              <input type="text" id="signup-username" required placeholder="maya_spots" class="ig-input">
+            </div>
+          </div>
+
+          <!-- Field: Password -->
+          <div class="input-field-wrap">
+            <label for="signup-password">Password</label>
+            <div class="ig-input-box">
+              <input type="password" id="signup-password" required placeholder="Minimum 6 characters" class="ig-input">
+              <button type="button" class="input-icon-btn toggle-password" data-target="signup-password" aria-label="Show password" title="Show password">Show</button>
+            </div>
+            <div class="password-meter">
+              <div class="password-meter-fill" id="signupPassMeter"></div>
+            </div>
+          </div>
+
+          <!-- Field: Confirm Password -->
+          <div class="input-field-wrap">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <div class="ig-input-box">
+              <input type="password" id="signup-confirm-password" required placeholder="Repeat password" class="ig-input">
+              <button type="button" class="input-icon-btn toggle-password" data-target="signup-confirm-password" aria-label="Show password" title="Show password">Show</button>
+            </div>
+          </div>
+
+          <!-- Improvisation: Account Type (Normal vs Pro Creator) -->
+          <div class="input-field-wrap">
+            <label>Select Creator Profile Type</label>
+            <div class="account-type-grid">
+              <label class="type-card-label selected" id="typeNormalLabel" for="typeNormal">
+                <input type="radio" name="accountType" value="normal" checked id="typeNormal" class="sr-only">
+                <span class="type-card-title">Explorer</span>
+                <span class="type-card-desc">Post casual spots, bookmark & review</span>
+              </label>
+              <label class="type-card-label" id="typeProLabel" for="typePro">
+                <input type="radio" name="accountType" value="professional" id="typePro" class="sr-only">
+                <span class="type-card-title text-[#38bdf8]">Pro Creator</span>
+                <span class="type-card-desc">Aadhaar + Face Scan verified badge</span>
+              </label>
+            </div>
+            <p class="text-[11px] text-slate-300 mt-2" id="accountTypeHint">
+              Normal members can post spots & reviews. Pro Creators unlock verified checkmarks, trusted review score & affiliate stay links.
+            </p>
+          </div>
+
+          <!-- Improvisation: Profile Customization & Travel Vibes -->
+          <div class="profile-setup-box">
+            <label class="block text-xs font-semibold text-slate-200 mb-2">Profile details (optional)</label>
+            
+            <div class="avatar-upload-row">
+              <div class="avatar-circle-preview" id="avatarPreviewContainer" title="Click to upload custom avatar">
+                <img id="avatarPreviewImg" src="https://api.dicebear.com/7.x/notionists/svg?seed=explorer" alt="Avatar">
+                <span class="avatar-upload-badge">+</span>
+                <input type="file" id="customAvatarInput" accept="image/*" class="hidden">
+              </div>
+              <div class="flex-1">
+                <span class="text-[11px] text-slate-400 block mb-1">Choose an avatar:</span>
+                <div class="preset-avatars-row">
+                  <span class="preset-chip active" data-seed="mountain" title="Mountain Explorer">M</span>
+                  <span class="preset-chip" data-seed="beach" title="Coastal Wanderer">C</span>
+                  <span class="preset-chip" data-seed="palace" title="Heritage Hunter">H</span>
+                  <span class="preset-chip" data-seed="forest" title="Backpacker">F</span>
+                  <span class="preset-chip" data-seed="food" title="Foodie Explorer">F</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-slate-300 mb-1">Bio / Travel Motto</label>
+              <input type="text" id="signup-bio" placeholder="e.g. Hidden cafe hunter and hill roadtripper" class="ig-input text-xs !py-2">
+            </div>
+
+            <div class="mt-2.5">
+              <label class="block text-[11px] text-slate-300 mb-1">Select Favorite Vibes</label>
+              <div class="vibe-chips-wrap" id="vibeChipsContainer">
+                <span class="vibe-tag selected" data-vibe="Hidden Gems">Hidden Gems</span>
+                <span class="vibe-tag" data-vibe="Budget Stays">Budget Stays</span>
+                <span class="vibe-tag" data-vibe="Boutique Cafes">Cafe Spots</span>
+                <span class="vibe-tag" data-vibe="Trekking">Trekking</span>
+                <span class="vibe-tag" data-vibe="Local Food">Street Food</span>
+                <span class="vibe-tag" data-vibe="Roadtrips">Road Trips</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="signupOtpStep" class="hidden mb-3 p-3 rounded-xl border border-[#d2a35c]/30 bg-[#d2a35c]/5">
+            <label for="signupOtpCode" class="block text-xs font-semibold text-slate-200 mb-2">Email verification code</label>
+            <p id="signupOtpMessage" class="text-[11px] text-slate-400 mb-2">Enter the six-digit code sent to your email address.</p>
+            <input id="signupOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" class="ig-input" placeholder="000000" aria-describedby="signupOtpMessage">
+            <div class="flex items-center justify-between mt-2">
+              <button type="button" id="resendSignupOtpBtn" class="text-[11px] font-semibold text-[#38bdf8]" disabled>Resend in 60s</button>
+              <button type="button" id="editSignupDetailsBtn" class="text-[11px] text-slate-400 hover:text-white">Edit details</button>
+            </div>
+          </div>
+
+          <div id="signUpErrorMsg" class="hidden mb-3 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-xs text-red-300"></div>
+
+          <button type="submit" class="ig-auth-btn" id="signUpSubmitBtn">
+            <span>Create Account</span>
+          </button>
+        </form>
+
+        <!-- SIGN IN FORM -->
+        <form id="signInForm" class="auth-form">
+          
+          <div id="loginErrorMsg" class="hidden mb-3 p-2.5 rounded-xl bg-red-500/15 border border-red-500/30 text-xs text-red-300"></div>
+
+          <div class="input-field-wrap">
+            <label for="signin-username">Username or Email</label>
+            <div class="ig-input-box">
+              <input type="text" id="signin-username" required placeholder="Username or email" autocapitalize="none" autocomplete="username" class="ig-input">
+            </div>
+          </div>
+
+          <div class="input-field-wrap">
+            <div class="flex justify-between items-center mb-1">
+              <label for="signin-password">Password</label>
+            </div>
+            <div class="ig-input-box">
+              <input type="password" id="signin-password" required placeholder="Enter password" autocomplete="current-password" class="ig-input">
+              <button type="button" class="input-icon-btn toggle-password" data-target="signin-password" aria-label="Show password" title="Show password">Show</button>
+            </div>
+          </div>
+
+          <button type="submit" class="ig-auth-btn" id="signInSubmitBtn">
+            <span>Log In</span>
+          </button>
+
+          <div class="text-center mt-3 pt-3 border-t border-white/10">
+            <span class="text-xs text-slate-400">Don't have an account? </span>
+            <button type="button" class="text-xs text-[#38bdf8] font-bold hover:underline" id="goToSignUpBtn">Sign Up</button>
+          </div>
+
+          <div class="text-center">
+            <button type="button" class="text-xs text-white/60 hover:text-white font-medium flex items-center justify-center gap-1.5 mx-auto" id="exploreAsGuestBtn">
+              Continue without an account →
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+      <!-- Trust & Anti-Fake Footer -->
+      <p class="auth-footer-terms">
+        By continuing, you agree to our Travel Community Guidelines, AI Content Verification Rules, and 1-Account Aadhaar Identity Policy.
+      </p>
+
     </div>
   </div>
 
-  <!-- Professional Account Verification Modal -->
+  <!-- Professional Account Verification Modal (Aadhaar & Face Scan) -->
   <div id="proVerifyModal" class="hidden fixed inset-0 z-50 flex items-center justify-center pro-modal-bg p-4">
-    <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl shadow-2xl relative border border-[#7fb4d4]/40 text-[#fdf1e1]">
-      <button id="closeProVerifyModalBtn" class="absolute top-4 right-4 text-[#fdf1e1]/60 hover:text-white text-2xl leading-none">&times;</button>
+    <div class="glass-modal max-w-md w-full p-6 md:p-8 rounded-3xl shadow-2xl relative border border-[#38bdf8]/40 text-white bg-[#0c1412]/95 backdrop-blur-2xl">
+      <button id="closeProVerifyModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
       
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-2xl bg-[#7fb4d4]/20 flex items-center justify-center text-[#7fb4d4] text-xl font-bold">🛡️</div>
+        <div class="w-10 h-10 rounded-2xl bg-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] text-xl font-bold">ID</div>
         <div>
-          <h3 class="font-ogg text-2xl text-[#7fb4d4]">Professional Verification</h3>
-          <p class="text-xs text-[#fdf1e1]/70">1 Professional Creator Account per Aadhaar</p>
+          <h3 class="font-ogg text-2xl text-[#38bdf8]">Professional Verification</h3>
+          <p class="text-xs text-slate-300">Strict Policy: 1 Creator Account per Aadhaar</p>
         </div>
       </div>
 
       <!-- Step Indicator -->
       <div class="flex items-center justify-between mb-6 text-xs border-b border-white/10 pb-3">
-        <span id="step1Tab" class="font-bold text-[#7fb4d4]">1. Aadhaar ID</span>
-        <span class="text-[#fdf1e1]/40">•</span>
-        <span id="step2Tab" class="text-[#fdf1e1]/40">2. Face Liveness</span>
-        <span class="text-[#fdf1e1]/40">•</span>
-        <span id="step3Tab" class="text-[#fdf1e1]/40">3. Badge Status</span>
+        <span id="step1Tab" class="font-bold text-[#38bdf8]">1. Aadhaar ID</span>
+        <span class="text-slate-500">•</span>
+        <span id="step2Tab" class="text-slate-500">2. Face Liveness</span>
+        <span class="text-slate-500">•</span>
+        <span id="step3Tab" class="text-slate-500">3. Badge Unlocked</span>
       </div>
 
       <!-- Step 1: Aadhaar Input -->
       <div id="proStep1" class="space-y-4">
-        <p class="text-xs text-[#fdf1e1]/80 leading-relaxed">
-          Enter your 12-digit Aadhaar number to verify creator identity. Security policy strictly limits <strong>1 Professional Creator account per Aadhaar number</strong> to prevent fake reviews and scam accounts.
+        <p class="text-xs text-slate-200 leading-relaxed">
+          Enter your 12-digit Aadhaar number to verify authentic identity. Security policy strictly limits <strong>1 Professional Creator account per Aadhaar number</strong> to prevent fake paid hotel reviews and scam accounts.
         </p>
         <div>
-          <label class="block text-xs uppercase tracking-wider font-semibold text-[#fdf1e1]/70 mb-1">Aadhaar Number (12 Digits)</label>
-          <input type="text" id="aadhaarInput" maxlength="12" placeholder="e.g. 5489 1204 9832" class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white text-sm focus:outline-none focus:border-[#7fb4d4] tracking-widest font-mono">
+          <label class="block text-xs uppercase tracking-wider font-semibold text-slate-300 mb-1">Aadhaar Number (12 Digits)</label>
+          <input type="text" id="aadhaarInput" maxlength="14" placeholder="5489 1204 9832" class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white text-sm focus:outline-none focus:border-[#38bdf8] tracking-widest font-mono">
         </div>
-        <div id="aadhaarError" class="text-xs text-red-400 hidden"></div>
-        <button id="nextToStep2Btn" class="w-full bg-[#7fb4d4] text-[#111411] py-3 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-colors mt-2">Proceed to Biometric Face Scan →</button>
+        <div id="aadhaarError" class="text-xs text-red-400 hidden bg-red-500/10 p-2.5 rounded-lg border border-red-500/30"></div>
+        <button id="nextToStep2Btn" class="w-full bg-[#38bdf8] text-[#070c0a] font-bold py-3.5 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-all shadow-lg shadow-[#38bdf8]/20">Proceed to Biometric Face Scan </button>
       </div>
 
       <!-- Step 2: Face Scan Simulation -->
       <div id="proStep2" class="space-y-4 hidden text-center">
-        <p class="text-xs text-[#fdf1e1]/80">Position your face in the camera viewport for liveness and anti-spoofing verification.</p>
+        <p class="text-xs text-slate-200">Position your face inside the biometric frame for anti-spoofing and liveness cross-check.</p>
         
-        <div class="relative w-40 h-40 mx-auto rounded-full bg-black/60 border-2 border-[#7fb4d4] overflow-hidden flex items-center justify-center shadow-xl">
-          <div class="w-full h-1 bg-[#7fb4d4] absolute scanner-line opacity-80 shadow-[0_0_15px_#7fb4d4]"></div>
-          <div class="text-5xl opacity-80" id="faceIcon">👤</div>
-          <div class="absolute bottom-2 text-[10px] font-mono bg-black/80 px-2.5 py-0.5 rounded-full text-emerald-400 border border-emerald-400/30" id="scanStatusText">Aligning Face...</div>
+        <div class="relative w-44 h-44 mx-auto rounded-full bg-black/60 border-2 border-[#38bdf8] overflow-hidden flex items-center justify-center shadow-xl">
+          <div class="corner-bracket corner-tl"></div>
+          <div class="corner-bracket corner-tr"></div>
+          <div class="corner-bracket corner-bl"></div>
+          <div class="corner-bracket corner-br"></div>
+          <div class="scanner-line"></div>
+          <div class="text-2xl font-semibold transition-all duration-300" id="faceIcon"></div>
+          <div class="absolute bottom-3 text-[10px] font-mono bg-black/85 px-3 py-1 rounded-full text-emerald-400 border border-emerald-400/30" id="scanStatusText">Aligning Sensor...</div>
         </div>
 
-        <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-          <div id="scanProgressBar" class="bg-[#7fb4d4] h-full w-0 transition-all duration-300"></div>
+        <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden mt-3">
+          <div id="scanProgressBar" class="bg-[#38bdf8] h-full w-0 transition-all duration-300"></div>
         </div>
 
-        <button id="completeFaceScanBtn" class="w-full bg-[#7fb4d4] text-[#111411] py-3 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-colors">Start Face Liveness Scan</button>
+        <button id="completeFaceScanBtn" class="w-full bg-[#38bdf8] text-[#070c0a] font-bold py-3.5 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-colors mt-2">Start Biometric Face Scan</button>
       </div>
 
       <!-- Step 3: Pro Creator Status Confirmed -->
       <div id="proStep3" class="space-y-4 hidden text-center">
-        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 text-3xl font-bold flex items-center justify-center mx-auto">✓</div>
-        <h4 class="font-ogg text-xl text-[#7fb4d4]">Professional Verification Complete!</h4>
-        <p class="text-xs text-[#fdf1e1]/80 leading-relaxed">
-          Your Aadhaar ID and Biometric Liveness have been verified. You now hold a <strong>Professional Creator Account</strong>.
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center mx-auto border border-emerald-400/40">Done</div>
+        <h4 class="font-ogg text-2xl text-[#38bdf8]">Professional Verification Passed!</h4>
+        <p class="text-xs text-slate-200 leading-relaxed">
+          Your Aadhaar identity and Biometric Liveness have been confirmed. You are officially an authenticated <strong>Verified Pro Creator</strong>.
         </p>
 
-        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-left text-xs space-y-2">
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-left text-xs space-y-2.5">
           <div class="flex justify-between items-center">
-            <span class="text-[#fdf1e1]/60">Verification Badge:</span>
-            <span class="text-blue-400 font-bold">☑️ Pro Creator</span>
+            <span class="text-slate-400">Creator Badge:</span>
+            <span class="text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-400/30">Verified Pro Creator</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-[#fdf1e1]/60">1-Aadhaar Policy:</span>
-            <span class="text-emerald-400 font-bold">Passed (Unique ID)</span>
+            <span class="text-slate-400">1-Aadhaar Restriction:</span>
+            <span class="text-emerald-400 font-bold">Passed (Unique Record)</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-[#fdf1e1]/60">Checkmark Milestone:</span>
-            <span class="text-amber-300 font-bold">Unlocked after 5 posts</span>
+            <span class="text-slate-400">AI Trust Score Weight:</span>
+            <span class="text-amber-300 font-bold">+15% Platform Priority</span>
           </div>
         </div>
 
-        <button id="finishVerificationBtn" class="w-full bg-[#7fb4d4] text-[#111411] py-3 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-colors">Enter Platform Feed</button>
+        <button id="finishVerificationBtn" class="w-full bg-[#38bdf8] text-[#070c0a] font-bold py-3.5 rounded-xl font-bold text-xs hover:bg-[#a5d3f0] transition-all shadow-lg shadow-[#38bdf8]/25">Enter Social Feed </button>
       </div>
 
     </div>
