@@ -127,7 +127,20 @@ async function connectMongoStore() {
     const compressed = await streamToBuffer(mongoBucket.openDownloadStream(state.fileId));
     dbCache = JSON.parse(gunzipSync(compressed).toString('utf8'));
   } else {
-    dbCache = emptyDatabase();
+    // One-time migration for installations that still have the legacy local
+    // JSON store. Never overwrite an existing MongoDB snapshot.
+    const legacyFile = path.join(__dirname, 'db.json');
+    if (fs.existsSync(legacyFile)) {
+      try {
+        const legacyData = JSON.parse(fs.readFileSync(legacyFile, 'utf8'));
+        dbCache = { ...emptyDatabase(), ...legacyData };
+      } catch (err) {
+        console.warn('Legacy db.json could not be imported:', err.message);
+        dbCache = emptyDatabase();
+      }
+    } else {
+      dbCache = emptyDatabase();
+    }
     await persistSnapshot(dbCache);
   }
   lastPersistedDb = structuredClone(dbCache);
@@ -282,20 +295,38 @@ async function sendSignupOtp(email, code) {
   }
 }
 
-function signupConflict(db, username, email) {
-  return db.users.some(u =>
-    ((u.username || '').toLowerCase() === username.toLowerCase() ||
-      (u.email || '').toLowerCase() === email.toLowerCase()) &&
-    !((u.email || '').toLowerCase() === email.toLowerCase() &&
-      (u.username || '').toLowerCase() === username.toLowerCase() &&
-      u.email_verified !== true)
-  );
+function signupConflicts(db, username, email) {
+  const cleanUsername = String(username || '').trim().toLowerCase();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const users = Array.isArray(db.users) ? db.users : [];
+  const isReusablePendingSignup = user =>
+    String(user.username || '').trim().toLowerCase() === cleanUsername &&
+    String(user.email || '').trim().toLowerCase() === cleanEmail &&
+    user.email_verified !== true;
+
+  return {
+    username: users.some(user =>
+      String(user.username || '').trim().toLowerCase() === cleanUsername && !isReusablePendingSignup(user)
+    ),
+    email: users.some(user =>
+      String(user.email || '').trim().toLowerCase() === cleanEmail && !isReusablePendingSignup(user)
+    )
+  };
+}
+
+function signupConflictError(conflicts) {
+  if (conflicts.username && conflicts.email) {
+    return 'This username and email are already registered. Choose a different username and email, or log in.';
+  }
+  if (conflicts.username) return 'This username is already taken. Choose a different username.';
+  if (conflicts.email) return 'This email is already registered. Use a different email or log in.';
+  return 'This account information is already registered.';
 }
 
 function findPendingLegacySignup(db, username, email) {
   return db.users.find(u =>
-    (u.email || '').toLowerCase() === email.toLowerCase() &&
-    (u.username || '').toLowerCase() === username.toLowerCase() &&
+    String(u.email || '').trim().toLowerCase() === email.trim().toLowerCase() &&
+    String(u.username || '').trim().toLowerCase() === username.trim().toLowerCase() &&
     u.email_verified !== true
   ) || null;
 }
@@ -312,7 +343,13 @@ function hashPassword(password) {
 
 function verifyPassword(password, storedHash) {
   const [scheme, saltHex, hashHex] = String(storedHash || '').split('$');
-  if (scheme !== 'scrypt' || !saltHex || !hashHex) return Promise.resolve(false);
+  if (scheme !== 'scrypt' || !saltHex || !hashHex) {
+    // Older versions stored passwords as plain text in db.json. Let an
+    // existing account sign in once, then the login route upgrades the value.
+    const supplied = Buffer.from(String(password ?? ''), 'utf8');
+    const legacy = Buffer.from(String(storedHash || ''), 'utf8');
+    return Promise.resolve(supplied.length > 0 && supplied.length === legacy.length && crypto.timingSafeEqual(supplied, legacy));
+  }
   const salt = Buffer.from(saltHex, 'hex');
   const expected = Buffer.from(hashHex, 'hex');
   return new Promise((resolve, reject) => {
@@ -339,8 +376,9 @@ app.post('/api/auth/signup', async (req, res) => {
   }
 
   const db = readDB();
-  if (signupConflict(db, cleanUsername, cleanEmail)) {
-    return res.status(409).json({ error: 'Username or email already exists.' });
+  const conflicts = signupConflicts(db, cleanUsername, cleanEmail);
+  if (conflicts.username || conflicts.email) {
+    return res.status(409).json({ error: signupConflictError(conflicts), conflicts });
   }
 
   const existing = pendingSignups.get(cleanEmail);
@@ -413,9 +451,10 @@ app.post('/api/auth/signup/verify', async (req, res) => {
   }
 
   const db = readDB();
-  if (signupConflict(db, pending.user.username, email)) {
+  const conflicts = signupConflicts(db, pending.user.username, email);
+  if (conflicts.username || conflicts.email) {
     pendingSignups.delete(email);
-    return res.status(409).json({ error: 'Username or email already exists.' });
+    return res.status(409).json({ error: signupConflictError(conflicts), conflicts });
   }
   const passwordHash = await hashPassword(pending.user.password);
   let newUser = findPendingLegacySignup(db, pending.user.username, email);
@@ -525,11 +564,16 @@ app.post('/api/auth/login', async (req, res) => {
 
   const cleanInput = (username || '').trim().toLowerCase();
   const user = db.users.find(u =>
-    (u.username && u.username.toLowerCase() === cleanInput) ||
-    (u.email && u.email.toLowerCase() === cleanInput)
+    (u.username && String(u.username).trim().toLowerCase() === cleanInput) ||
+    (u.email && String(u.email).trim().toLowerCase() === cleanInput)
   );
   if (!user || !await verifyPassword(password, user.password)) {
     return res.status(401).json({ error: 'Invalid username or password' });
+  }
+
+  if (!String(user.password || '').startsWith('scrypt$')) {
+    user.password = await hashPassword(password);
+    writeDB(db);
   }
 
   res.json({

@@ -86,6 +86,7 @@
 *Files: `planner.html`, `travelPlannerService.js`*
 - **Personalized Itinerary Engine**: Configurable parameters for destination, starting city, trip duration (1-14 days), budget tier (*Budget, Moderate, Luxury*), vibe profile, pacing, and group dynamics.
 - **Groq Cloud Integration**: Powered by Llama 3.3 70B Versatile for high-speed, day-by-day itinerary synthesis with morning, afternoon, and evening breakdowns.
+- **Google Travel Research**: Optionally enriches plans with Google Custom Search references and Google Places results, with Google Maps links for the destination and recommended stays, activities, spots, and food.
 - **Platform Cross-Referencing**: Automatically matches itineraries against real community posts stored in `MongoDB`, injecting verified hotel numbers and secret spots into the AI output.
 - **Travel Toolkit**:
   - Comprehensive estimated budget breakdown (stay, transit, food, activities).
@@ -305,6 +306,13 @@ PORT=3000
 # Groq Cloud API Key (Get free key at https://console.groq.com)
 GROQ_API_KEY="gsk_your_actual_groq_api_key_here"
 
+# Optional Google Places API key (enable Places API in Google Cloud)
+GOOGLE_MAPS_API_KEY=""
+
+# Optional Google Custom Search JSON API credentials
+GOOGLE_CSE_API_KEY=""
+GOOGLE_CSE_CX=""
+
 # Signup email verification through Gmail SMTP (no custom domain required)
 GMAIL_USER="youraccount@gmail.com"
 GMAIL_APP_PASSWORD="your-16-character-app-password"
@@ -315,6 +323,8 @@ MONGODB_DB_NAME="know_a_spot"
 ```
 
 > **Note**: If `GROQ_API_KEY` is not provided, the AI Planner automatically switches to the built-in offline intelligence engine, generating high-fidelity itineraries from cached travel patterns and platform community spots without crashing.
+
+Google research uses optional server-side credentials. Set `GOOGLE_MAPS_API_KEY` for Places results and `GOOGLE_CSE_API_KEY` plus `GOOGLE_CSE_CX` for web search references. Without them, the planner still creates Google Maps search links and displays which live research configuration is missing. Never commit API keys.
 
 Signup verification sends a six-digit code to the address entered in the signup form. Set `GMAIL_USER` and `GMAIL_APP_PASSWORD`, then restart the server. Create a Google App Password after enabling 2-Step Verification; Google explains the requirements in [Gmail Help](https://support.google.com/mail/answer/185833). Use an App Password, never your regular Gmail password. Signup remains blocked until email delivery and code verification both succeed.
 

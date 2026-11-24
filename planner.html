@@ -118,13 +118,10 @@
     body input[type="number"]::-webkit-outer-spin-button,
     body input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     body input[type="number"] { -moz-appearance: textfield; }
-    /* select: custom sky-blue chevron + solid navy dropdown surface */
+    /* Base select treatment; the light planner form adds its single chevron below. */
     body select.glass-input {
       background-color: rgba(8, 24, 51, 0.92);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.9rem center;
-      background-size: 1.05rem 1.05rem;
+      background-image: none;
       padding-right: 2.75rem;
       font-size: 0.85rem;
       cursor: pointer;
@@ -268,10 +265,359 @@
       outline-offset: 3px;
     }
 
+    /* ---------- SaaS planner layout and light theme ---------- */
+    body {
+      background: #f7f6fc;
+      background-image: none;
+      color: #29263d;
+    }
+    body .glass-nav {
+      background: rgba(255, 255, 255, .92);
+      border-bottom: 1px solid #e8e4f2;
+      box-shadow: 0 3px 16px rgba(48, 36, 82, .05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    body nav .heading-gradient {
+      background: linear-gradient(115deg, #332253, #805ad5);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body nav a:not(.heading-gradient) { color: #625d72; }
+    body nav a:not(.heading-gradient):hover { color: #7045c6; }
+    body nav span {
+      border-color: #e2d7f4;
+      background: #f1ebfa;
+      color: #7045c6;
+    }
+
+    .planner-page {
+      width: min(100% - 48px, 1480px);
+      margin: 0 auto;
+      padding: 38px 0 64px;
+    }
+    .planner-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      align-items: start;
+      gap: 30px;
+    }
+    .planner-sidebar {
+      position: static;
+      width: 100%;
+      max-width: 760px;
+      margin-inline: auto;
+      min-width: 0;
+    }
+    .planner-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 0 0 22px;
+      text-align: center;
+    }
+    .planner-eyebrow {
+      display: block;
+      color: #8062bf;
+      font-size: .68rem;
+      font-weight: 750;
+      letter-spacing: .14em;
+    }
+    .planner-heading h1 {
+      margin: 8px 0 7px;
+      color: #28233c;
+      font-size: clamp(1.65rem, 2.3vw, 2.05rem);
+      line-height: 1.12;
+      letter-spacing: -.035em;
+      white-space: nowrap;
+    }
+    .planner-heading p {
+      margin: 0;
+      color: #777287;
+      font-size: .88rem;
+      line-height: 1.65;
+    }
+    .planner-quick-destinations { margin-bottom: 18px; }
+    .planner-section-label {
+      display: block;
+      margin-bottom: 9px;
+      color: #6d687e;
+      font-size: .72rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .planner-destination-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 7px;
+      padding-left: 0;
+    }
+    .planner-destination-field {
+      width: 100%;
+      margin-left: 0;
+    }
+    body .quick-dest-btn {
+      padding: 6px 10px;
+      border: 1px solid #e3deef;
+      border-radius: 999px;
+      background: #fff;
+      color: #625b75;
+      font-size: .72rem;
+      font-weight: 600;
+    }
+    body .quick-dest-btn:hover {
+      border-color: #b7a3e6;
+      background: #f2edfc;
+      color: #6743b7;
+    }
+    body #plannerForm {
+      margin: 0;
+      padding: 20px;
+      border: 1px solid #e9e5f1;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 12px 34px rgba(49, 37, 83, .08);
+      color: #302c42;
+    }
+    .planner-form-heading {
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f0edf5;
+      text-align: center;
+    }
+    .planner-form-heading h2 {
+      margin: 0 0 3px;
+      color: #302b43;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .planner-form-heading p {
+      margin: 0;
+      color: #888397;
+      font-size: .75rem;
+    }
+    .planner-form-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      max-width: 520px;
+      margin-inline: auto;
+      gap: 15px;
+    }
+    .planner-form-advanced {
+      margin-top: 24px;
+      padding-top: 0;
+      border-top: 0;
+    }
+    body #plannerForm .field-label {
+      margin-bottom: 6px;
+      color: #625b75;
+      font-size: .66rem;
+      letter-spacing: .08em;
+    }
+    body #plannerForm .glass-input {
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid #e3dfec;
+      border-radius: 11px;
+      background-color: #fff;
+      box-shadow: none;
+      color: #302c42 !important;
+      font-size: .82rem;
+      color-scheme: light;
+    }
+    body #plannerForm #destInput { padding-left: 42px; }
+    body #plannerForm .glass-input::placeholder { color: #a19bad !important; }
+    body #plannerForm .glass-input:hover { border-color: #c9b9e8; background-color: #fff; }
+    body #plannerForm .glass-input:focus,
+    body #plannerForm .glass-input:focus-visible {
+      border-color: #8b65d1;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(139, 101, 209, .13);
+    }
+    body #plannerForm select.glass-input {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 42px;
+      background: #fff url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237d5bc3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 14px center / 16px 16px;
+      color: #302c42 !important;
+    }
+    body #plannerForm select.glass-input option { background: #fff; color: #302c42; }
+    body #plannerForm .step-btn {
+      width: 2.15rem;
+      height: 2.15rem;
+      border-color: #e3dfec;
+      background: #f7f5fb;
+      color: #655b7c;
+    }
+    body #plannerForm .step-btn:hover {
+      border-color: #c3b0e8;
+      background: #f0eafa;
+      color: #6743b7;
+    }
+    body #plannerForm .day-preset {
+      background: #f7f5fb;
+      border-color: #e7e2ef;
+      color: #696378;
+    }
+    body #plannerForm .day-preset:hover,
+    body #plannerForm .day-preset.is-active {
+      background: #eee8f9;
+      border-color: #c8b7e9;
+      color: #6441b3;
+    }
+    body #plannerForm .day-preset.is-active { font-weight: 750; }
+    body #plannerForm #destHint { font-size: .69rem; }
+    body .btn-primary {
+      border: 1px solid #7250bc;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #8463ce, #6945b5);
+      box-shadow: 0 8px 18px rgba(105, 69, 181, .2);
+      color: #fff;
+    }
+    body .btn-primary:hover {
+      background: linear-gradient(135deg, #7655c2, #5c39a7);
+      box-shadow: 0 10px 22px rgba(105, 69, 181, .27);
+    }
+    body #plannerForm #generateBtn {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 19px;
+      padding: 12px 16px;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+    .planner-workspace { min-width: 0; }
+    .planner-workspace {
+      width: 100%;
+      max-width: 1100px;
+      margin-inline: auto;
+    }
+    body .planner-workspace .glass-card {
+      border: 1px solid #e9e5f1;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(49, 37, 83, .06);
+      color: #302c42;
+    }
+    body .planner-workspace .heading-gradient {
+      background: linear-gradient(115deg, #6142a6, #966dd5);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body .planner-workspace [class*="text-white"] { color: #5f5a6e; }
+    body .planner-workspace [class*="text-sky-"] { color: #704bb5; }
+    body .planner-workspace [class*="text-emerald-"] { color: #23876a; }
+    body .planner-workspace [class*="text-green-"] { color: #258466; }
+    body .planner-workspace [class*="text-amber-"] { color: #a36a20; }
+    body .planner-workspace [class*="border-white/"] { border-color: #eeeaf4; }
+    body .planner-workspace [class*="border-sky-"] { border-color: #e1d8f1; }
+    body .planner-workspace [class*="bg-white/"] { background-color: #f8f6fb; }
+    body .planner-workspace [class*="bg-[#0a1f3d]"] { background: #f8f6fb; }
+    body .planner-workspace .badge-verified {
+      border-color: #e0d5f3;
+      background: #f1ebfa;
+      color: #6948aa;
+    }
+    body .planner-workspace .badge-web {
+      border-color: #cce9df;
+      background: #eaf7f1;
+      color: #267c61;
+    }
+    body .planner-workspace .btn-ghost {
+      border-color: #e3deef;
+      background: #fff;
+      color: #625b75;
+    }
+    body .planner-workspace .btn-ghost:hover {
+      border-color: #c7b5e7;
+      background: #f3effb;
+      color: #6542b2;
+    }
+    body #dayTabsContainer button {
+      background: #f5f2fa;
+      color: #675f78;
+    }
+    body #dayTabsContainer button[class*="bg-sky-400"] {
+      background: #7553bc;
+      color: #fff;
+    }
+    body .planner-workspace .notice-amber {
+      border-color: #f2dfbd;
+      background: #fffaf1;
+    }
+    body .planner-workspace .notice-amber [class*="text-amber-"] { color: #94621f; }
+    body .planner-workspace .step-icon { background-color: #f0ebf8; }
+    body .planner-workspace .step-icon.text-sky-300 { color: #704bb5; }
+    body .planner-workspace .glass-card-hover:hover {
+      border-color: #cdbce9;
+      box-shadow: 0 16px 36px rgba(49, 37, 83, .1);
+    }
+    body::-webkit-scrollbar-track { background: #f0edf6; }
+    body::-webkit-scrollbar-thumb {
+      border-color: #f0edf6;
+      background: linear-gradient(180deg, #a28ad1, #7757bb);
+    }
+    body::-webkit-scrollbar-thumb:hover { background: #6945b5; }
+    body :is(a, button):focus-visible {
+      outline-color: #8b65d1;
+    }
+
+    @media (max-width: 900px) {
+      .planner-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+      .planner-page { width: min(100% - 32px, 1480px); }
+      .planner-sidebar { width: 100%; max-width: 760px; margin-inline: auto; }
+      .planner-workspace { width: 100%; max-width: 1100px; margin-inline: auto; }
+      body #plannerForm { padding: 17px; }
+    }
+    @media (max-width: 720px) {
+      .planner-page { width: min(100% - 28px, 640px); padding-top: 24px; }
+      .planner-layout {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        width: 100%;
+        gap: 24px;
+      }
+      .planner-sidebar {
+        position: static;
+        width: 100%;
+        max-width: 500px;
+        margin-inline: auto;
+      }
+      .planner-workspace {
+        width: 100%;
+        max-width: 500px;
+        margin-inline: auto;
+      }
+      .planner-heading { margin-bottom: 18px; }
+      .planner-heading h1 { font-size: 1.85rem; white-space: normal; }
+      .planner-quick-destinations { margin-bottom: 14px; text-align: center; }
+      .planner-destination-pills { padding-left: 0; }
+      .planner-destination-field { width: 100%; margin-left: 0; }
+      body #plannerForm .field-label { display: block; text-align: center; }
+      body #plannerForm { padding: 19px; }
+      #resultsArea { padding-bottom: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-fade-in { animation: none; }
+    }
+
     /* ---------- Print / Save as PDF ---------- */
     @media print {
       body { background: #ffffff !important; background-image: none !important; }
       nav, #loadingState, #quickDestTags, #plannerForm, #rawJsonArea, .z-\[9999\] { display: none !important; }
+      .planner-page { width: 100%; margin: 0; padding: 0; }
+      .planner-layout { display: block; }
+      .planner-sidebar { display: none !important; }
       body .glass-card {
         background: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
@@ -299,48 +645,34 @@
     </div>
   </nav>
 
-  <main class="max-w-6xl mx-auto my-8 sm:my-12 px-4 sm:px-6 pb-24 flex-1 w-full">
-    <!-- Hero Banner -->
-    <div class="text-center mb-8 sm:mb-10">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold bg-sky-400/10 text-sky-200 border border-sky-400/30 mb-5 flex-wrap justify-center">
-        <span>☑️ Verified Pro Accounts Prioritised</span>
-        <span class="opacity-40">•</span>
-        <span>🏛️ Government & Reliable Public Sources Fallback</span>
-        <span class="opacity-40">•</span>
-        <span>📍 Nearest Locations in Word Form (No Map Links)</span>
-      </div>
-      <h1 class="font-ogg text-4xl md:text-5xl mb-3 heading-gradient">AI Itinerary & Spot Planner</h1>
-      <p class="text-base md:text-lg text-white/85 max-w-2xl mx-auto leading-relaxed">Your perfect itinerary generates in seconds.</p>
-    </div>
+  <main class="planner-page flex-1 w-full">
+    <div class="planner-layout">
+      <aside class="planner-sidebar">
+        <header class="planner-heading">
+          <span class="planner-eyebrow">YOUR NEXT ADVENTURE</span>
+          <h1 class="font-ogg">Plan a trip you’ll remember</h1>
+          <p>Build a thoughtful itinerary around the way you like to travel.</p>
+        </header>
 
-    <!-- Quick Suggestions Tags -->
-    <div class="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-10" id="quickDestTags">
-      <span class="text-xs text-white/60 mr-1 font-medium">Popular Spots:</span>
-      <button type="button" class="quick-dest-btn px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5" data-dest="Indore, Madhya Pradesh">
-        <span>☑️</span> Indore (Community Verified)
-      </button>
-      <button type="button" class="quick-dest-btn px-3 py-1.5 rounded-full text-xs font-medium" data-dest="Jaipur, Rajasthan">
-        Jaipur
-      </button>
-      <button type="button" class="quick-dest-btn px-3 py-1.5 rounded-full text-xs font-medium" data-dest="Manali, Himachal Pradesh">
-        Manali
-      </button>
-      <button type="button" class="quick-dest-btn px-3 py-1.5 rounded-full text-xs font-medium" data-dest="Goa">
-        Goa
-      </button>
-      <button type="button" class="quick-dest-btn px-3 py-1.5 rounded-full text-xs font-medium" data-dest="Kyoto, Japan">
-        Kyoto
-      </button>
-    </div>
+        <!-- Quick Suggestions Tags -->
+        <div class="planner-quick-destinations hidden" id="quickDestTags">
+          <span class="planner-section-label">Destinations from community posts</span>
+          <div class="planner-destination-pills" id="platformDestinationPills">
+          </div>
+        </div>
 
-    <!-- Generator Form Card -->
-    <div class="glass-card p-5 sm:p-6 md:p-8 rounded-3xl shadow-2xl mb-16 sm:mb-20 border border-white/10" id="plannerForm">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-6">
+        <!-- Generator Form Card -->
+        <div class="glass-card" id="plannerForm">
+          <div class="planner-form-heading">
+            <h2>Trip details</h2>
+            <p>Personalize your itinerary</p>
+          </div>
+          <div class="planner-form-fields">
         <!-- Destination -->
-        <div class="md:col-span-1">
+        <div class="md:col-span-1 planner-destination-field">
           <label for="destInput" class="field-label block mb-2">Destination <span class="text-sky-400">*</span></label>
           <div class="relative">
-            <input type="text" id="destInput" placeholder="e.g. Indore, Jaipur, Manali, Bali" class="glass-input w-full pl-11 text-base" required>
+            <input type="text" id="destInput" placeholder="Enter a destination" class="glass-input w-full pl-11 text-base" required>
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-base opacity-70 pointer-events-none select-none">📍</span>
           </div>
           <div id="destHint" class="text-xs text-sky-300 mt-2 min-h-[18px] leading-snug"></div>
@@ -371,45 +703,45 @@
             <option value="luxury">Luxury (5-Star Stays, Fine Dining)</option>
           </select>
         </div>
+          </div>
+
+          <!-- Advanced Preferences -->
+          <div class="planner-form-fields planner-form-advanced">
+            <div>
+              <label for="groupSizeSelect" class="field-label block mb-2">Group Type</label>
+              <select id="groupSizeSelect" class="glass-input w-full text-sm">
+                <option value="solo">Solo Traveler</option>
+                <option value="couple">Couple / Duo</option>
+                <option value="friends" selected>Friends Group</option>
+                <option value="family">Family with Kids</option>
+              </select>
+            </div>
+            <div>
+              <label for="travelStyleSelect" class="field-label block mb-2">Travel Style</label>
+              <select id="travelStyleSelect" class="glass-input w-full text-sm">
+                <option value="balanced" selected>Balanced · Highlights + Hidden Spots</option>
+                <option value="culture">Heritage &amp; Architecture</option>
+                <option value="foodie">Foodie &amp; Night Markets</option>
+                <option value="adventure">Adventure &amp; Nature</option>
+                <option value="relaxation">Slow &amp; Relaxed Vibes</option>
+              </select>
+            </div>
+            <div>
+              <label for="interestsInput" class="field-label block mb-2">Interests <span class="normal-case tracking-normal text-white/45 font-normal">(Optional)</span></label>
+              <input type="text" id="interestsInput" placeholder="e.g. sunsets, local sweets, cafes, trekking" class="glass-input w-full text-sm">
+            </div>
+          </div>
+
+          <button id="generateBtn" class="btn-primary">
+            <span>Generate Itinerary</span>
+            <span>⚡</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Advanced Preferences Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 pt-6 border-t border-white/10 mb-7">
-        <div>
-          <label for="groupSizeSelect" class="field-label block mb-2">Group Type</label>
-          <select id="groupSizeSelect" class="glass-input w-full text-sm">
-            <option value="solo">Solo Traveler</option>
-            <option value="couple">Couple / Duo</option>
-            <option value="friends" selected>Friends Group</option>
-            <option value="family">Family with Kids</option>
-          </select>
-        </div>
-        <div>
-          <label for="travelStyleSelect" class="field-label block mb-2">Travel Style</label>
-          <select id="travelStyleSelect" class="glass-input w-full text-sm">
-            <option value="balanced" selected>Balanced · Highlights + Hidden Spots</option>
-            <option value="culture">Heritage &amp; Architecture</option>
-            <option value="foodie">Foodie &amp; Night Markets</option>
-            <option value="adventure">Adventure &amp; Nature</option>
-            <option value="relaxation">Slow &amp; Relaxed Vibes</option>
-          </select>
-        </div>
-        <div>
-          <label for="interestsInput" class="field-label block mb-2">Specific Interests <span class="normal-case tracking-normal text-white/45 font-normal">(Optional)</span></label>
-          <input type="text" id="interestsInput" placeholder="e.g. sunsets, local sweets, cafes, trekking" class="glass-input w-full text-sm">
-        </div>
-      </div>
-
-      <div class="text-center">
-        <button id="generateBtn" class="btn-primary px-8 sm:px-10 py-4 rounded-full font-bold text-base sm:text-lg glow-btn inline-flex items-center justify-center gap-2.5 w-full sm:w-auto">
-          <span>Generate Actionable Route</span>
-          <span>⚡</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Dynamic Animated Loading State -->
-    <div id="loadingState" class="hidden text-center py-16 px-4">
+      <section class="planner-workspace" aria-label="Generated itinerary">
+        <!-- Dynamic Animated Loading State -->
+        <div id="loadingState" class="hidden text-center py-16 px-4">
       <div class="glass-card max-w-lg mx-auto p-6 sm:p-8 rounded-3xl shadow-2xl border border-sky-400/35">
         <div class="relative w-16 h-16 mx-auto mb-6">
           <div class="absolute inset-0 rounded-full border-4 border-sky-400/20"></div>
@@ -439,18 +771,18 @@
           </div>
         </div>
       </div>
-    </div>
+        </div>
 
-    <!-- Complete Actionable Itinerary Results Area -->
-    <div id="resultsArea" class="hidden space-y-8 animate-fade-in pb-16">
+        <!-- Complete Actionable Itinerary Results Area -->
+        <div id="resultsArea" class="hidden space-y-8 animate-fade-in pb-16">
       
-      <!-- Prominent Location Format Notice Banner (Word Form, Not Map Link) -->
+      <!-- Location details and map links -->
       <div class="glass-card notice-amber p-4 sm:p-5 rounded-2xl border border-amber-400/30 flex items-start gap-3.5">
         <span class="text-xl">📍</span>
         <div class="text-xs leading-relaxed">
-          <strong class="text-amber-300 font-semibold uppercase tracking-wider block mb-0.5">Location Format Notice:</strong>
+          <strong class="text-amber-300 font-semibold uppercase tracking-wider block mb-0.5">Location details:</strong>
           <span class="text-white/90" id="resLocationNotice">
-            All nearest locations, proximity indicators, and transit routes are provided strictly in <strong>descriptive word form</strong> (text descriptions) and <strong>not as map links</strong>.
+            Use the Google Maps links on recommended places to view locations and directions.
           </span>
         </div>
       </div>
@@ -458,16 +790,11 @@
       <!-- Top Actions & Source Banner -->
       <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-sky-400/35">
         <div>
-          <div class="flex items-center gap-3 flex-wrap mb-2">
-            <span id="sourceBadge" class="badge-verified px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
-              ☑️ Verified Professional Creator Backed
-            </span>
-            <span id="sourcesUsedBadge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/10 text-white/75">
-              Sources: Verified Pro + Government Sources
-            </span>
-          </div>
           <h2 class="font-ogg text-3xl md:text-4xl text-sky-300" id="resDestinationTitle">Trip to Destination</h2>
           <p class="text-xs text-white/80 mt-1 max-w-xl" id="resSourcesSummaryHeader"></p>
+          <div id="resDestinationMapLink"></div>
+          <div id="resResearchLinks" class="mt-2 flex flex-wrap gap-x-3 gap-y-1"></div>
+          <p id="resResearchStatus" class="mt-1 text-[11px] text-amber-700"></p>
         </div>
 
         <div class="flex gap-2.5 flex-wrap">
@@ -615,16 +942,8 @@
         </div>
       </div>
 
-      <!-- 9. Practical Tips -->
-      <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl">
-        <h3 class="text-xs uppercase tracking-widest text-sky-300 font-bold mb-3 flex items-center gap-2">
-          <span>💡</span> 9. Practical Tips & Safety Notes
-        </h3>
-        <ul class="space-y-2.5 text-sm text-white/85" id="resTipsList">
-          <!-- Tips added dynamically -->
-        </ul>
-      </div>
-
+        </div>
+      </section>
     </div>
   </main>
 
@@ -664,14 +983,6 @@
       // 2. Fetch platform destinations for autocomplete / hints
       fetchPlatformDestinations();
 
-      // 3. Quick dest buttons
-      document.querySelectorAll('.quick-dest-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.getElementById('destInput').value = btn.getAttribute('data-dest');
-          checkDestinationHint(btn.getAttribute('data-dest'));
-        });
-      });
-
       // 4. Live destination typing hint
       const destInput = document.getElementById('destInput');
       destInput.addEventListener('input', (e) => {
@@ -700,15 +1011,31 @@
 
     async function fetchPlatformDestinations() {
       try {
-        const res = await fetch(`${API_BASE}/destinations`);
-        if (res.ok) {
-          verifiedDestinations = await res.json();
-        }
+        const res = await fetch(API_BASE + '/destinations');
+        if (!res.ok) return;
+        const destinations = await res.json();
+        verifiedDestinations = Array.isArray(destinations) ? destinations : [];
+        const pills = document.getElementById('platformDestinationPills');
+        const quickDestinations = document.getElementById('quickDestTags');
+        if (!pills || !quickDestinations) return;
+        pills.replaceChildren();
+        verifiedDestinations.slice(0, 5).forEach(destination => {
+          if (!destination || !destination.name) return;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'quick-dest-btn';
+          button.textContent = destination.name;
+          button.addEventListener('click', () => {
+            document.getElementById('destInput').value = destination.name;
+            checkDestinationHint(destination.name);
+          });
+          pills.appendChild(button);
+        });
+        quickDestinations.classList.toggle('hidden', pills.childElementCount === 0);
       } catch (e) {
         console.log('Destinations load skipped');
       }
     }
-
     function checkDestinationHint(text) {
       const hint = document.getElementById('destHint');
       const val = (text || '').toLowerCase().trim();
@@ -717,10 +1044,10 @@
         return;
       }
       const match = verifiedDestinations.find(d => d.name.toLowerCase().includes(val) || val.includes(d.name.toLowerCase().split(',')[0]));
-      if (match || val.includes('indore') || val.includes('22.7')) {
-        hint.innerHTML = '✨ <strong class="text-sky-300">Platform posts detected!</strong> Posts from verified Professional accounts are prioritised. Nearest locations provided in word form.';
+      if (match) {
+        hint.innerHTML = '✨ <strong class="text-sky-300">Community posts found.</strong> Matching posts will be considered when they contain relevant recommendations.';
       } else {
-        hint.innerHTML = '🏛️ No platform post yet. <strong class="text-emerald-300">Searching reliable public websites & official government tourism sources.</strong> (Nearest locations in word form).';
+        hint.innerHTML = 'No community post matched. <strong class="text-emerald-300">Recommendations will use AI and any configured live research sources.</strong>';
       }
     }
 
@@ -728,7 +1055,7 @@
     async function handleGeneratePlan() {
       const destination = document.getElementById('destInput').value.trim();
       if (!destination) {
-        alert('Please enter a destination name (e.g. Indore, Jaipur, Manali).');
+        alert('Please enter a destination name.');
         document.getElementById('destInput').focus();
         return;
       }
@@ -823,40 +1150,21 @@
       if (locationNoticeEl) {
         locationNoticeEl.innerHTML = plan.location_format_notice 
           ? `<strong>Location Notice:</strong> ${plan.location_format_notice}`
-          : 'All nearest locations, proximity indicators, and transit routes are provided strictly in <strong>descriptive word form</strong> (text descriptions) and <strong>not as map links</strong>.';
+          : 'Use the Google Maps links on recommended places to view locations and directions.';
       }
 
-      const sourceBadge = document.getElementById('sourceBadge');
-      const sourcesUsedBadge = document.getElementById('sourcesUsedBadge');
       const sourcesSummaryHeader = document.getElementById('resSourcesSummaryHeader');
 
-      if (plan.has_verified_pro_post) {
-        const proStr = plan.pro_influencer_names && plan.pro_influencer_names.length > 0 
-          ? `@${plan.pro_influencer_names.join(', @')}` 
-          : 'Verified Pro Creator';
-        sourceBadge.className = 'badge-verified px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 bg-sky-400/20 text-sky-200 border border-sky-400/45';
-        sourceBadge.innerHTML = `<span>☑️</span> Verified Professional Creator Backed (${proStr})`;
-      } else if (plan.has_platform_post) {
-        const infStr = plan.influencer_names && plan.influencer_names.length > 0 ? `@${plan.influencer_names.join(', @')}` : 'Community Traveler';
-        sourceBadge.className = 'badge-verified px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5';
-        sourceBadge.innerHTML = `<span>👥</span> Community Post Backed (${infStr})`;
-      } else {
-        sourceBadge.className = 'badge-web px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
-        sourceBadge.innerHTML = `<span>🏛️</span> Reliable Public Websites & Govt Tourism Sources`;
-      }
-
       if (sourcesSummaryHeader) {
-        sourcesSummaryHeader.textContent = plan.sources_summary || 'Verified travel intelligence synthesized for your route.';
+        sourcesSummaryHeader.textContent = plan.sources_summary || 'No source summary was provided.';
       }
-
-      const sourcesUsedFormatted = (plan.sources_used || ['government_and_public_sources']).map(s => {
-        if (s === 'verified_professional_post') return 'VERIFIED PRO CREATOR';
-        if (s === 'community_post') return 'COMMUNITY MEMBER';
-        if (s === 'government_and_public_sources') return 'GOVT & RELIABLE PUBLIC SOURCES';
-        return s.replace(/_/g, ' ').toUpperCase();
-      }).join(' + ');
-
-      sourcesUsedBadge.textContent = `Sources: ${sourcesUsedFormatted}`;
+      renderGoogleResearch(plan);
+      appendGoogleMapsLink(
+        document.getElementById('resDestinationMapLink'),
+        plan.destination,
+        plan.destination,
+        plan.destination_map_url
+      );
 
       // 1. Snapshot
       document.getElementById('resSnapshot').textContent = plan.snapshot || 'No snapshot available.';
@@ -869,23 +1177,27 @@
       stayGrid.innerHTML = '';
       (plan.stay_options || []).forEach(stay => {
         const isPro = stay.source === 'verified_professional_post';
-        const isGovt = stay.source === 'government_and_public_sources' || stay.source === 'web_search';
+        const isPublicSource = stay.source === 'government_and_public_sources';
+        const isWebSearch = stay.source === 'web_search';
         const card = document.createElement('div');
         card.className = 'glass-card p-5 rounded-2xl flex flex-col justify-between glass-card-hover border ' + (isPro ? 'border-sky-400/55' : 'border-white/10');
         
         const tierLabel = (stay.tier || 'option').toUpperCase();
         const tierColor = stay.tier === 'luxury' ? 'text-amber-300' : stay.tier === 'budget' ? 'text-green-300' : 'text-sky-300';
-
         let badgeHtml = '';
         if (isPro) {
-          badgeHtml = '<span class="text-xs text-sky-300 font-semibold" title="Verified Professional Creator Recommendation">☑️ Verified Pro</span>';
-        } else if (isGovt) {
-          badgeHtml = '<span class="text-xs text-emerald-400 font-semibold" title="Sourced from Official Govt & Reliable Public Records">🏛️ Govt & Public Sourced</span>';
+          badgeHtml = '<span class="text-xs text-sky-300 font-semibold">Verified Pro</span>';
+        } else if (isWebSearch) {
+          badgeHtml = '<span class="text-xs text-emerald-300">Web research</span>';
+        } else if (isPublicSource) {
+          badgeHtml = '<span class="text-xs text-emerald-300">Public source</span>';
+        } else if (stay.source === 'community_post' || stay.source === 'influencer_post') {
+          badgeHtml = '<span class="text-xs text-sky-300">Community</span>';
         } else {
-          badgeHtml = '<span class="text-xs text-sky-300" title="Community Traveler">👥 Community</span>';
+          badgeHtml = '<span class="text-xs text-white/70">AI recommendation</span>';
         }
 
-        const nearestLoc = stay.nearest_location || `Located in ${stay.area || 'Central Area'} (word form)`;
+        const nearestLoc = stay.nearest_location || 'Location details were not provided.';
 
         card.innerHTML = `
           <div>
@@ -894,7 +1206,7 @@
               ${badgeHtml}
             </div>
             <h4 class="font-ogg text-xl text-white mb-1">${stay.name}</h4>
-            <div class="text-xs text-sky-300 mb-1 font-medium">📍 Area: ${stay.area || 'Central Area'}</div>
+            <div class="text-xs text-sky-300 mb-1 font-medium">📍 Area: ${stay.area || 'Area not provided'}</div>
             <div class="text-[11px] text-amber-200/90 mb-2 p-2 rounded-lg bg-amber-500/10 border border-amber-400/20">
               <strong class="text-amber-300">Nearest Location (Word Form):</strong> ${nearestLoc}
             </div>
@@ -902,9 +1214,10 @@
           </div>
           <div class="pt-3 border-t border-white/10 flex justify-between items-center text-xs">
             <span class="text-white/70">Est. Price:</span>
-            <strong class="text-white">${stay.price_per_night || 'Varies'}</strong>
+            <strong class="text-white">${stay.price_per_night || 'Not provided'}</strong>
           </div>
         `;
+        appendGoogleMapsLink(card.firstElementChild, stay.name, plan.destination, stay.map_url);
         stayGrid.appendChild(card);
       });
 
@@ -941,14 +1254,16 @@
 
           let actBadge = '';
           if (isPro) {
-            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified font-semibold bg-sky-400/20 text-sky-200">☑️ Verified Pro Spot</span>';
+            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified font-semibold bg-sky-400/20 text-sky-200">Verified Pro Spot</span>';
           } else if (isGovt) {
-            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web font-semibold bg-emerald-500/20 text-emerald-300">🏛️ Govt & Public Source</span>';
+            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web font-semibold bg-emerald-500/20 text-emerald-300">Web or public source</span>';
+          } else if (act.source === 'community_post' || act.source === 'influencer_post') {
+            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified font-semibold">Community Spot</span>';
           } else {
-            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified font-semibold">👥 Community Spot</span>';
+            actBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70 font-semibold">AI recommendation</span>';
           }
 
-          const nearestLoc = act.nearest_location || 'Positioned in central landmark quadrant (word form)';
+          const nearestLoc = act.nearest_location || 'Location details were not provided.';
 
           activitiesHtml += `
             <div class="p-4 rounded-2xl bg-white/[0.03] border ${isPro ? 'border-sky-400/45' : 'border-white/10'} flex flex-col md:flex-row justify-between gap-3">
@@ -962,9 +1277,10 @@
                   <strong class="text-amber-300">Nearest Location (Word Form):</strong> ${nearestLoc}
                 </div>
                 <p class="text-xs text-white/85 leading-relaxed">${act.note || ''}</p>
+                <div class="activity-map-link"></div>
               </div>
               <div class="text-xs md:text-right flex md:flex-col justify-between md:justify-center border-t md:border-t-0 pt-2 md:pt-0 border-white/10 text-white/75 min-w-[140px]">
-                <div>🚕 ${act.transport || 'Local transit'}</div>
+                <div>🚕 ${act.transport || 'Not provided'}</div>
                 <div class="font-semibold text-green-300 mt-1">${act.cost || ''}</div>
               </div>
             </div>
@@ -980,6 +1296,10 @@
             ${activitiesHtml}
           </div>
         `;
+        dayBlock.querySelectorAll('.activity-map-link').forEach((container, activityIndex) => {
+          const activity = (dayPlan.activities || [])[activityIndex];
+          appendGoogleMapsLink(container, activity.title, plan.destination, activity.map_url);
+        });
         itContainer.appendChild(dayBlock);
       });
 
@@ -997,7 +1317,7 @@
         const isInf = isPro || spot.source === 'community_post' || spot.source === 'influencer_post';
         const item = document.createElement('div');
         item.className = 'p-3 rounded-xl bg-white/[0.06] border border-white/10';
-        const nearestLoc = spot.nearest_location || 'Positioned in central landmark quadrant (word form)';
+        const nearestLoc = spot.nearest_location || 'Location details were not provided.';
 
         item.innerHTML = `
           <div class="flex justify-between items-start mb-1">
@@ -1009,6 +1329,7 @@
           </div>
           <div class="text-xs text-white/75">${spot.note || ''}</div>
         `;
+        appendGoogleMapsLink(item, spot.name, plan.destination, spot.map_url);
         if (isInf) {
           infSpotsList.appendChild(item);
           infSpotsCount++;
@@ -1019,10 +1340,10 @@
       });
 
       if (infSpotsCount === 0) {
-        infSpotsList.innerHTML = '<p class="text-xs text-white/65 italic">Recent verified professional creator information is unavailable on the platform for this destination. All spots are sourced directly from reliable public websites and official government sources.</p>';
+        infSpotsList.innerHTML = '<p class="text-xs text-white/65 italic">No matching creator recommendations were returned for this destination.</p>';
       }
       if (webSpotsCount === 0) {
-        webSpotsList.innerHTML = '<p class="text-xs text-white/65 italic">All spots matched directly from platform verified creator recommendations!</p>';
+        webSpotsList.innerHTML = '<p class="text-xs text-white/65 italic">No external recommendations were returned for this destination.</p>';
       }
 
       // 6. Food Grid
@@ -1033,15 +1354,19 @@
         const isPro = f.source === 'verified_professional_post';
         const isInf = isPro || f.source === 'community_post' || f.source === 'influencer_post';
         card.className = 'p-4 rounded-2xl bg-white/[0.04] border ' + (isPro ? 'border-sky-400/45' : 'border-white/10');
-        const nearestLoc = f.nearest_location || 'Situated in central culinary corridor (word form)';
+        const nearestLoc = f.nearest_location || 'Location details were not provided.';
 
         let foodBadge = '';
         if (isPro) {
-          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified bg-sky-400/20 text-sky-200 font-semibold">☑️ Pro Creator Pick</span>';
+          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified bg-sky-400/20 text-sky-200 font-semibold">Pro Creator Pick</span>';
         } else if (isInf) {
-          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified">👥 Community Pick</span>';
+          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-verified">Community Pick</span>';
+        } else if (f.source === 'web_search') {
+          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web bg-emerald-500/20 text-emerald-300 font-semibold">Web research</span>';
+        } else if (f.source === 'government_and_public_sources') {
+          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web bg-emerald-500/20 text-emerald-300 font-semibold">Public source</span>';
         } else {
-          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full badge-web bg-emerald-500/20 text-emerald-300 font-semibold">🏛️ Govt Tourism Pick</span>';
+          foodBadge = '<span class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70 font-semibold">AI recommendation</span>';
         }
 
         card.innerHTML = `
@@ -1054,6 +1379,7 @@
           </div>
           <p class="text-xs text-white/80 leading-relaxed">${f.note || ''}</p>
         `;
+        appendGoogleMapsLink(card, f.name, plan.destination, f.map_url);
         foodGrid.appendChild(card);
       });
 
@@ -1062,21 +1388,75 @@
 
       // 8. Budget
       const b = plan.budget_estimate || {};
-      document.getElementById('resBudgetTierCost').textContent = b.budget || '₹1,800/day';
-      document.getElementById('resMidTierCost').textContent = b.mid || '₹5,000/day';
-      document.getElementById('resLuxuryTierCost').textContent = b.luxury || '₹15,000/day';
-      document.getElementById('resTotalBudgetEst').textContent = b.total_estimated || 'Calculated per preference';
+      document.getElementById('resBudgetTierCost').textContent = b.budget || 'Not provided';
+      document.getElementById('resMidTierCost').textContent = b.mid || 'Not provided';
+      document.getElementById('resLuxuryTierCost').textContent = b.luxury || 'Not provided';
+      document.getElementById('resTotalBudgetEst').textContent = b.total_estimated || 'Not provided';
 
-      // 9. Practical Tips
-      const tipsList = document.getElementById('resTipsList');
-      tipsList.innerHTML = '';
-      (plan.tips || []).forEach(tip => {
-        const li = document.createElement('li');
-        li.className = 'flex items-start gap-2';
-        li.innerHTML = `<span class="text-sky-300 font-bold">•</span> <span>${tip}</span>`;
-        tipsList.appendChild(li);
+    }
+
+    function appendGoogleMapsLink(container, name, destination, mapUrl) {
+      if (!container || !name) return;
+
+      const query = destination && name.trim().toLowerCase() !== destination.trim().toLowerCase()
+        ? `${name}, ${destination}`
+        : name;
+      const fallbackUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+      let href = fallbackUrl;
+      if (mapUrl) {
+        try {
+          const parsedUrl = new URL(mapUrl);
+          if (parsedUrl.protocol === 'https:' &&
+              (parsedUrl.hostname === 'google.com' || parsedUrl.hostname.endsWith('.google.com'))) {
+            href = parsedUrl.href;
+          }
+        } catch {
+          href = fallbackUrl;
+        }
+      }
+
+      const link = document.createElement('a');
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'inline-block mt-2 text-xs font-semibold text-sky-300 underline decoration-sky-300/50 underline-offset-2 hover:text-sky-200';
+      link.textContent = 'Open in Google Maps ↗';
+      container.appendChild(link);
+    }
+
+    function renderGoogleResearch(plan) {
+      const linksContainer = document.getElementById('resResearchLinks');
+      const statusElement = document.getElementById('resResearchStatus');
+      linksContainer.replaceChildren();
+
+      (Array.isArray(plan.research_sources) ? plan.research_sources : []).forEach(source => {
+        if (!source || !source.url) return;
+        let url;
+        try {
+          url = new URL(source.url);
+        } catch {
+          return;
+        }
+        if (url.protocol !== 'https:') return;
+
+        const link = document.createElement('a');
+        link.href = url.href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'text-xs font-medium text-sky-300 underline decoration-sky-300/50 underline-offset-2 hover:text-sky-200';
+        link.textContent = source.title || url.hostname;
+        linksContainer.appendChild(link);
       });
 
+      const status = plan.google_research_status || {};
+      if (plan.google_research_notice) {
+        statusElement.textContent = plan.google_research_notice;
+      } else if (status.search && status.maps) {
+        const sourceCount = Array.isArray(plan.research_sources) ? plan.research_sources.length : 0;
+        statusElement.textContent = `Google research: ${sourceCount} web sources and ${status.maps.places_count || 0} map places.`;
+      } else {
+        statusElement.textContent = '';
+      }
     }
 
     function copyPlanJson() {

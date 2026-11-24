@@ -47,7 +47,6 @@ class SOSEngine {
         <div id="safetyModeCapsule" class="glass-modal px-3.5 py-1.5 rounded-full text-xs font-bold border flex items-center gap-2 cursor-pointer shadow-xl transition-all hover:scale-105 ${this.safetyMode ? 'border-emerald-500/50 text-emerald-300 bg-emerald-950/80' : 'border-white/20 text-white/70 bg-black/80'}">
           <span class="w-2.5 h-2.5 rounded-full ${this.safetyMode ? 'bg-emerald-400 animate-pulse' : 'bg-gray-400'} inline-block"></span>
           <span id="safetyModeStatusText">${this.safetyMode ? '🟢 SAFETY MODE ACTIVE' : '⚪ SAFETY MODE OFF'}</span>
-          <span class="text-[10px] opacity-60 ml-1 font-normal">(Click to Toggle)</span>
         </div>
 
         <button id="globalSOSButton" aria-label="Trigger SOS Emergency" class="relative w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 text-white font-black text-base border-4 border-white/30 shadow-[0_10px_25px_rgba(239,68,68,0.6)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center">
